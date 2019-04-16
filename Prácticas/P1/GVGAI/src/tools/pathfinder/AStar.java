@@ -84,7 +84,6 @@ public class AStar
 
     private void _dijkstraa(Node start)
     {
-
         ArrayList<Node> destinationsFromStart = new ArrayList<Node>();
         //All unvisited at the beginning.
         visited = new boolean[pathfinder.grid.length][pathfinder.grid[0].length];

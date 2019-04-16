@@ -38,7 +38,7 @@ public class PathFinder {
         this.astar = new AStar(this);
 
         init();
-        runAll();
+        //runAll();
 
         if(VERBOSE)
         {
@@ -89,7 +89,7 @@ public class PathFinder {
 
     public ArrayList<Node> getPath(Vector2d start, Vector2d end)
     {
-        return astar.getPath(new Node(start), new Node(end));
+        return astar.findPath(new Node(start), new Node(end));
     }
 
     private void runAll(int i, int j) {
