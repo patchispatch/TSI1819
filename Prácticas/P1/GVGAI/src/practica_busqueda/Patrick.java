@@ -19,7 +19,7 @@ public class Patrick extends BaseAgent {
     PathFinder pf;
     GameState gs;
 
-    ArrayList currentPath;
+    ArrayList<Node> currentPath;
     Iterator<Node> currentPos;
     boolean reroute;
 
@@ -47,16 +47,24 @@ public class Patrick extends BaseAgent {
 
         // Realcular ruta si es necesario:
         if(reroute) {
-            reroute();
+            reroute(stateObs);
         }
 
         // Acción a devolver:
-        Types.ACTIONS action;
+        Types.ACTIONS action = Types.ACTIONS.ACTION_NIL;
 
         // Decidir qué acción tomar según la siguiente posición de la ruta:
-        Node next = currentPos.next();
-        action = nextMove(next.position);
+        if(currentPos.hasNext()) {
+            Node next = currentPos.next();
+            action = nextMove(next.position);
+        }
 
+        try {
+            Thread.sleep(100);
+        }
+        catch (InterruptedException e) {
+            
+        }
 
         return action;
     }
@@ -97,13 +105,15 @@ public class Patrick extends BaseAgent {
 
 
     // Recalcular la ruta a seguir:
-    private void reroute() {
+    private void reroute(StateObservation stateObs) {
         // Ir a la gema más cercana
-        System.out.println(gs.playerPosition().x);
-        System.out.println(gs.playerPosition().y);
-        System.out.println(gs.nearestGem().x);
-        System.out.println(gs.nearestGem().y);
+        pf.run(stateObs);
         currentPath = pf.getPath(gs.playerPosition(), gs.nearestGem());
+
+        for (Node n : currentPath) {
+            System.out.println(n.position.x);
+        }
+
         currentPos = currentPath.iterator();
         reroute = false;
     }
