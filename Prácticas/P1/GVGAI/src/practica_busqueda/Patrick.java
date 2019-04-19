@@ -8,7 +8,7 @@ import tools.pathfinder.Node;
 import tools.Vector2d;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.ListIterator;
 import java.awt.*;
 
 import javax.swing.plaf.nimbus.State;
@@ -20,7 +20,7 @@ public class Patrick extends BaseAgent {
     GameState gs;
 
     ArrayList<Node> currentPath;
-    Iterator<Node> currentPos;
+    ListIterator<Node> currentPos;
     Vector2d nearestGem;
 
     boolean reroute;
@@ -61,53 +61,22 @@ public class Patrick extends BaseAgent {
             Node next = currentPos.next();
 
             action = nextMove(next.position);
+
+            // Comprobar si nos movemos a la siguiente casilla o simplemente cambiamos de orientación:
+            checkMove(action);
         }
         else {
-            System.out.println("Cogiendo gema");
-            action = nextMove(nearestGem);
+          //  action = pickGem();
             reroute = true;
         }
 
         // Para poder apreciar mejor lo tonto que es Patrick:
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         }
         catch (InterruptedException e) {}
 
         return action;
-    }
-
-
-    // Coger gema:
-    private Types.ACTIONS pickGem(StateObservation stateObs) {
-
-        PlayerObservation player = getPlayer(stateObs);
-        Vector2d playerPosition = gs.playerPosition();
-
-        Types.ACTIONS best = Types.ACTIONS.ACTION_NIL;
-        if (player.getManhattanDistance(nearestGem) == 1) { // Veo si puedo coger esa gema (está a una distancia de 1)
-
-            if (nearestGem.x < playerPosition.x) // gema a la izquierda
-                best = Types.ACTIONS.ACTION_LEFT;
-
-            else if (nearestGem.x > playerPosition.x) // gema a la derecha
-                best = Types.ACTIONS.ACTION_RIGHT;
-
-            else {
-                if (nearestGem.y < playerPosition.y) // gema arriba
-                   best = Types.ACTIONS.ACTION_UP;
-                else
-                    best = Types.ACTIONS.ACTION_DOWN;
-            }
-
-            reroute = true;
-            return best; // Escojo esa acción directamente
-        }
-
-        else {
-            reroute = true;
-            return Types.ACTIONS.ACTION_NIL;
-        }
     }
 
 
@@ -121,20 +90,24 @@ public class Patrick extends BaseAgent {
 
         if (nextPos.x != patrickPos.x){
             if (nextPos.x > patrickPos.x) {
+                System.out.println("Derecha");
                 nextMove = Types.ACTIONS.ACTION_RIGHT;
             }
 
             else {
+                System.out.println("Izquierda");
                 nextMove = Types.ACTIONS.ACTION_LEFT;
             }
         }
 
         else if (nextPos.y != patrickPos.y){
             if(nextPos.y > patrickPos.y){
+                System.out.println("Abajo");
                 nextMove = Types.ACTIONS.ACTION_DOWN;
             }
 
             else {
+                System.out.println("Arriba");
                 nextMove = Types.ACTIONS.ACTION_UP;
             }
         }
@@ -150,19 +123,39 @@ public class Patrick extends BaseAgent {
     // Recalcular la ruta a seguir:
     private void reroute(StateObservation stateObs) {
         // Ir a la gema más cercana
-        System.out.println("Recalculando");
+        System.out.println("Posición del jugador:");
+        System.out.println(gs.playerPosition());
 
         nearestGem = gs.nearestGem();
+
+        System.out.println("Posición de la gema:");
+        System.out.println(nearestGem);
 
         pf.run(stateObs);
         currentPath = pf.getPath(gs.playerPosition(), nearestGem);
 
         for (Node n : currentPath) {
             System.out.println(n.position.x);
+            System.out.println(n.position.y);
         }
 
-        currentPos = currentPath.iterator();
+        currentPos = currentPath.listIterator();
         reroute = false;
+    }
+
+
+    // Comprobar si nos movemos, y si no, corregir el iterador del plan:
+    void checkMove(Types.ACTIONS action) {
+
+        Orientation ori = gs.playerOrientation();
+
+        if ((action == Types.ACTIONS.ACTION_RIGHT && ori != Orientation.E) ||
+                (action == Types.ACTIONS.ACTION_UP && ori != Orientation.N) ||
+                (action == Types.ACTIONS.ACTION_LEFT && ori != Orientation.W) ||
+                (action == Types.ACTIONS.ACTION_DOWN && ori != Orientation.S))
+        {
+            currentPos.previous();
+        }
     }
 }
 

@@ -19,6 +19,7 @@ public class GameState {
 
     // Atributos:
     StateObservation obs;
+    PlayerObservation player;
     Patrick pat;
     ArrayList<Observation>[][] map;
 
@@ -125,6 +126,7 @@ public class GameState {
     void update(StateObservation so) {
         obs = so;
         map = pat.getObservationGrid(obs);
+        player = pat.getPlayer(obs);
     }
 
 
@@ -133,9 +135,6 @@ public class GameState {
 
         // Lista de las gemas (observation):
         ArrayList<Observation> gems = pat.getGemsList(obs);
-
-        // Jugador:
-        PlayerObservation player = pat.getPlayer(obs);
 
         // Iteramos para quedarnos con la gema más cercana:
         Observation near = gems.get(0);
@@ -159,10 +158,16 @@ public class GameState {
 
     // Devolver la posición del jugador:
     Vector2d playerPosition() {
-        PlayerObservation player = pat.getPlayer(obs);
         Vector2d playerPos = new Vector2d(player.getX(), player.getY());
 
         return playerPos;
+    }
+
+    Orientation playerOrientation() {
+        Orientation orientation = player.getOrientation();
+        System.out.println(orientation);
+
+        return orientation;
     }
 }
 
