@@ -21,9 +21,12 @@ public class Patrick extends BaseAgent {
 
     ArrayList<Node> currentPath;
     ListIterator<Node> currentPos;
-    Vector2d nearestGem;
+    Vector2d objective;
+    Vector2d nearestPortal;
+    int remainingGems;
 
     boolean reroute;
+    boolean hasGems;
 
     // Constructor:
     public Patrick(StateObservation so, ElapsedCpuTimer elapsedTimer) {
@@ -36,8 +39,12 @@ public class Patrick extends BaseAgent {
 
         pf = new PathFinder(obstacles);
         gs = new GameState(so, this);
+
         currentPath = new ArrayList();
+        remainingGems = getRemainingGems(so);
+
         reroute = true;
+        hasGems = false;
     }
 
     // Método act:
@@ -122,22 +129,22 @@ public class Patrick extends BaseAgent {
 
     // Recalcular la ruta a seguir:
     private void reroute(StateObservation stateObs) {
-        // Ir a la gema más cercana
-        System.out.println("Posición del jugador:");
-        System.out.println(gs.playerPosition());
 
-        nearestGem = gs.nearestGem();
+        // Si quedan gemas por coger:
+        remainingGems = getRemainingGems(stateObs);
 
-        System.out.println("Posición de la gema:");
-        System.out.println(nearestGem);
+        if (remainingGems != 0) {
+            // Ir a la gema más cercana
+            objective = gs.nearestGem();
+        }
+        else {
+            // Ir a la puerta
+            objective = gs.nearestPortal();
+        }
+
 
         pf.run(stateObs);
-        currentPath = pf.getPath(gs.playerPosition(), nearestGem);
-
-        for (Node n : currentPath) {
-            System.out.println(n.position.x);
-            System.out.println(n.position.y);
-        }
+        currentPath = pf.getPath(gs.playerPosition(), objective);
 
         currentPos = currentPath.listIterator();
         reroute = false;

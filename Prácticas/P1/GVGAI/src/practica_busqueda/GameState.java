@@ -18,10 +18,10 @@ public class GameState {
     public static final int BAT = 11;
 
     // Atributos:
-    StateObservation obs;
-    PlayerObservation player;
-    Patrick pat;
-    ArrayList<Observation>[][] map;
+    private StateObservation obs;
+    private PlayerObservation player;
+    private Patrick pat;
+    private ArrayList<Observation>[][] map;
 
 
     // Constructor:
@@ -154,6 +154,13 @@ public class GameState {
         // Devolver coordenadas:
         Vector2d nearestGem = new Vector2d(near.getX(), near.getY());
         return nearestGem;
+    }
+
+    Vector2d nearestPortal() {
+        Observation e = pat.getExit(obs);
+        Vector2d exit = new Vector2d(e.getX(), e.getY());
+
+        return exit;
     }
 
     // Devolver la posición del jugador:
