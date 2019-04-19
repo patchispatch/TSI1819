@@ -170,12 +170,30 @@ public class GameState {
         return playerPos;
     }
 
+
+    // Devuelve la orientación del jugador:
     Orientation playerOrientation() {
         Orientation orientation = player.getOrientation();
-        System.out.println(orientation);
 
         return orientation;
     }
+
+
+    // Devuelve el contenido de una posición:
+    Observation get(double x, double y) {
+        return map[(int) x][(int) y].get(0);
+    }
+
+    // Devuelve el ancho del mapa:
+    int mapWidth() {
+        return map.length;
+    }
+
+    // Devuelve el largo del mapa:
+    int mapHeight() {
+        return map[0].length;
+    }
+
 }
 
 
