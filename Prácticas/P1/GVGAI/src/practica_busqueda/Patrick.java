@@ -29,6 +29,8 @@ public class Patrick extends BaseAgent {
     boolean reroute;
     boolean hasGems;
 
+    Types.ACTIONS bufferedAction;
+
     // Constructor:
     public Patrick(StateObservation so, ElapsedCpuTimer elapsedTimer) {
         super(so, elapsedTimer);
@@ -47,6 +49,8 @@ public class Patrick extends BaseAgent {
         danger = false;
         reroute = true;
         hasGems = false;
+
+        bufferedAction = Types.ACTIONS.ACTION_NIL;
     }
 
     // Método act:
@@ -59,33 +63,44 @@ public class Patrick extends BaseAgent {
         // Actualizar estado del juego:
         gs.update(stateObs);
 
-        // Comprobar si estamos en peligro:
-        action = checkBug();
+        // Comprobar si hay una acción en el buffer:
+        if (bufferedAction != Types.ACTIONS.ACTION_NIL) {
+            action = bufferedAction;
+            bufferedAction = Types.ACTIONS.ACTION_NIL;
+        }
+        else {
+            // Comprobar si estamos en peligro:
+            action = checkBug();
 
-        if (!danger) {
-            // Realcular ruta si es necesario:
-            if(reroute) {
-                reroute(stateObs);
-            }
+            if (!danger) {
 
-            // Decidir qué acción tomar según la siguiente posición de la ruta:
-            if(currentPos.hasNext()) {
-                Node next = currentPos.next();
+                // Fuera de peligro:
+                System.out.println("Fuera de peligro");
 
-                action = nextMove(next.position);
+                // Realcular ruta si es necesario:
+                if(reroute) {
+                    reroute(stateObs);
+                }
 
-                // Comprobar si nos movemos a la siguiente casilla o simplemente cambiamos de orientación:
-                checkMove(action);
-            }
-            else {
-                // Recalculamos:
-                reroute = true;
+                // Decidir qué acción tomar según la siguiente posición de la ruta:
+                if(currentPos.hasNext()) {
+                    Node next = currentPos.next();
+
+                    action = nextMove(next.position);
+
+                    // Comprobar si nos movemos a la siguiente casilla o simplemente cambiamos de orientación:
+                    checkMove(action);
+                }
+                else {
+                    // Recalculamos:
+                    reroute = true;
+                }
             }
         }
 
         // Para poder apreciar mejor lo tonto que es Patrick:
         try {
-            Thread.sleep(100);
+            Thread.sleep(1000);
         }
         catch (InterruptedException e) {}
 
@@ -98,8 +113,6 @@ public class Patrick extends BaseAgent {
 
         Types.ACTIONS nextMove;
         Vector2d patrickPos = gs.playerPosition();
-
-        // Comprobamos si es una gema:
 
         if (nextPos.x != patrickPos.x){
             if (nextPos.x > patrickPos.x) {

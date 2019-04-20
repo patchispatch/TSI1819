@@ -181,7 +181,9 @@ public class GameState {
 
     // Devuelve el contenido de una posición:
     Observation get(double x, double y) {
-        return map[(int) x][(int) y].get(0);
+        Observation o = map[(int) x][(int) y].get(0);
+        System.out.println(o);
+        return o;
     }
 
     // Devuelve el ancho del mapa:
@@ -192,6 +194,29 @@ public class GameState {
     // Devuelve el largo del mapa:
     int mapHeight() {
         return map[0].length;
+    }
+
+
+    // Devuelve la posición relativa de un objeto al jugador:
+    Orientation relativeOrientation(Vector2d object) {
+        Orientation ori = playerOrientation();
+        Vector2d pos = playerPosition();
+        Orientation result;
+
+        if(object.x >= pos.x && object.y < pos.y) {
+            result = Orientation.N;
+        }
+        else if(object.x > pos.x && object.y >= pos.y) {
+            result = Orientation.E;
+        }
+        else if(object.x <= pos.x && object.y > pos.y) {
+            result = Orientation.S;
+        }
+        else {
+            result = Orientation.W;
+        }
+
+        return result;
     }
 
 }
