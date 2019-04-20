@@ -70,7 +70,7 @@ public class Patrick extends BaseAgent {
         }
         else {
             // Comprobar si estamos en peligro:
-            action = checkBug();
+            action = checkBug(stateObs);
 
             if (!danger) {
 
@@ -100,7 +100,7 @@ public class Patrick extends BaseAgent {
 
         // Para poder apreciar mejor lo tonto que es Patrick:
         try {
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch (InterruptedException e) {}
 
@@ -186,117 +186,85 @@ public class Patrick extends BaseAgent {
 
 
     // Esquiva un bicho si lo tiene a dos casillas de distancia:
-    Types.ACTIONS checkBug() {
-        Vector2d pos = gs.playerPosition();
-        int height = gs.mapHeight() - 1;
-        int width = gs.mapWidth() - 1;
+    Types.ACTIONS checkBug(StateObservation stateObs) {
+        PlayerObservation player = getPlayer(stateObs);
 
-        System.out.println(width);
-        System.out.println(height);
+        Types.ACTIONS action = Types.ACTIONS.ACTION_NIL;
 
-        // Valores:
+        // Obtener enemigos:
+        ArrayList<Observation>[] enemies = this.getEnemiesList(stateObs);
 
-        double x = pos.x;
-        double y = pos.y;
+        for (int i = 0; i < enemies.length; i++) {
+            for (Observation obs : enemies[i]) {
+                int d = player.getManhattanDistance(obs);
 
-        System.out.println("X: " + x);
-        System.out.println("Y: " + y);
+                // Enemigo en zona de peligro
+                if (d <= 2) {
+                    // Estamos en peligro:
+                    System.out.println("En peligro");
+                    danger = true;
 
+                    Vector2d bugPos = new Vector2d(obs.getX(), obs.getY());
+                    Orientation bugOrientation = gs.relativeOrientation(bugPos);
 
-        double xPlus2 = pos.x + 2;
-        if (xPlus2 > width) {xPlus2 = width;}
+                    // Decidir la acción a realizar:
+                    action = escape(bugOrientation);
 
-        double xMinus2 = pos.x - 2;
-        if (xMinus2 < 0) {xMinus2 = 0;}
+                    // Si no estamos mirando en la dirección opuesta al bicho, metemos la
+                    // acción en el buffer:
+                    if (bugOrientation != opposite(player.getOrientation())) {
+                        bufferedAction = action;
+                    }
 
-        double yPlus2 = pos.y + 2;
-        if (yPlus2 > height) {yPlus2 = height;}
-
-        double yMinus2 = pos.x - 2;
-        if (yMinus2 < 0) {yMinus2 = 0;}
-
-        double xPlus1 = pos.x + 1;
-        double xMinus1 = pos.x - 1;
-        double yPlus1 = pos.y + 1;
-        double yMinus1 = pos.y - 1;
-
-
-        // x + 2, y + 0
-        if ((gs.get(xPlus2, y).getType() == ObservationType.SCORPION) ||
-                (gs.get(xPlus2, y).getType() == ObservationType.BAT))
-        {
-            // Ir en dirección contraria: oeste
-            danger = true;
-            return Types.ACTIONS.ACTION_LEFT;
-        }
-        // x + 1, y + 1
-        else if ((gs.get(xPlus1, yPlus1).getType() == ObservationType.SCORPION) ||
-                (gs.get(xPlus1, yPlus1).getType() == ObservationType.BAT))
-        {
-            // Ir en dirección contraria: oeste
-            danger = true;
-            return Types.ACTIONS.ACTION_LEFT;
-        }
-        // x + 0, y + 2
-        else if ((gs.get(x, yPlus2).getType() == ObservationType.SCORPION) ||
-                (gs.get(x, yPlus2).getType() == ObservationType.BAT))
-        {
-            // Ir en dirección contraria: norte
-            danger = true;
-            return Types.ACTIONS.ACTION_UP;
-        }
-        // x - 1, y + 1
-        else if ((gs.get(xMinus1, yPlus1).getType() == ObservationType.SCORPION) ||
-                (gs.get(xMinus1, yPlus1).getType() == ObservationType.BAT))
-        {
-            // Ir en dirección contraria: norte
-            danger = true;
-            return Types.ACTIONS.ACTION_UP;
-        }
-        // x - 2, y + 0
-        else if ((gs.get(xMinus2, y).getType() == ObservationType.SCORPION) ||
-                (gs.get(xMinus2, y).getType() == ObservationType.BAT))
-        {
-            // Ir en dirección contraria: este
-            danger = true;
-            return Types.ACTIONS.ACTION_RIGHT;
-        }
-        // x - 1, y - 1
-        else if ((gs.get(xMinus1, yMinus1).getType() == ObservationType.SCORPION) ||
-                (gs.get(xMinus1, yMinus1).getType() == ObservationType.BAT))
-        {
-            // Ir en dirección contraria: este
-            danger = true;
-            return Types.ACTIONS.ACTION_RIGHT;
-        }
-        // x + 0, y - 2
-        else if ((gs.get(x, yMinus2).getType() == ObservationType.SCORPION) ||
-                (gs.get(x, yMinus2).getType() == ObservationType.BAT))
-        {
-            // Ir en dirección contraria: sur
-            danger = true;
-            return Types.ACTIONS.ACTION_DOWN;
-        }
-        // x + 1, y - 1
-        else if ((gs.get(xPlus1, yMinus1).getType() == ObservationType.SCORPION) ||
-                (gs.get(xPlus1, yMinus1).getType() == ObservationType.BAT))
-        {
-            // Ir en dirección contraria: sur
-            danger = true;
-            return Types.ACTIONS.ACTION_DOWN;
-        }
-        // No hay bichos:
-        else {
-            // No hace nada:
-            if (danger) {
-                reroute = true;
-                danger = false;
+                    // Salimos del bucle cagando leches:
+                    return action;
+                }
             }
+        }
 
-            return Types.ACTIONS.ACTION_NIL;
+        // Si hemos llegado hasta aquí estamos a salvo:
+        danger = false;
+        return action;
+    }
+
+
+    // Devuelve la orientación opuesta a la dada:
+    private Orientation opposite(Orientation ori) {
+        if(ori == Orientation.N) {
+            return Orientation.S;
+        }
+        else if(ori == Orientation.S) {
+            return Orientation.N;
+        }
+        else if(ori == Orientation.E) {
+            return Orientation.W;
+        }
+        else {
+            return Orientation.E;
         }
     }
 
+
+    // Huir en la dirección opuesta a la orientación dada:
+    private Types.ACTIONS escape(Orientation ori) {
+
+        Types.ACTIONS action;
+
+        if(ori == Orientation.N) {
+            action = Types.ACTIONS.ACTION_DOWN;
+        }
+        else if(ori == Orientation.E) {
+            action = Types.ACTIONS.ACTION_LEFT;
+        }
+        else if(ori == Orientation.S) {
+            action = Types.ACTIONS.ACTION_UP;
+        }
+        else {
+            action = Types.ACTIONS.ACTION_RIGHT;
+        }
+
+        return action;
+    }
 }
 
 
