@@ -182,7 +182,11 @@ public class GameState {
     // Devuelve el contenido de una posición:
     Observation get(double x, double y) {
         Observation o = map[(int) x][(int) y].get(0);
-        System.out.println(o);
+        return o;
+    }
+
+    Observation get(Vector2d pos) {
+        Observation o = map[(int) pos.x][(int) pos.y].get(0);
         return o;
     }
 
@@ -217,6 +221,22 @@ public class GameState {
         }
 
         return result;
+    }
+
+
+    // Comprueba si una posición tiene una piedra encima, para no acabar
+    // como Garcilaso de la Vega:
+    boolean rockAbove(Vector2d pos) {
+        Observation rock = get(pos.x, pos.y - 1);
+
+        System.out.println("Posible roca " + rock);
+
+        if(rock.getType() == ObservationType.BOULDER) {
+            System.out.println("Posible Garcilaso");
+            return true;
+        }
+
+        return false;
     }
 
 }

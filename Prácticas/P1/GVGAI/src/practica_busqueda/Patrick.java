@@ -10,6 +10,7 @@ import tools.Vector2d;
 import java.util.ArrayList;
 import java.util.ListIterator;
 import java.awt.*;
+import java.util.Vector;
 
 import javax.swing.plaf.nimbus.State;
 
@@ -18,6 +19,7 @@ public class Patrick extends BaseAgent {
     // Atributos:
     PathFinder pf;
     GameState gs;
+    PathFinder bugFinder;
 
     ArrayList<Node> currentPath;
     ListIterator<Node> currentPos;
@@ -42,6 +44,16 @@ public class Patrick extends BaseAgent {
 
         pf = new PathFinder(obstacles);
         gs = new GameState(so, this);
+
+        // BugFinder: devuelve un camino de tierra excavada entre un elemento (bicho) y
+        // el jugador.
+        ArrayList<Integer> everything = new ArrayList();
+        everything.add(gs.WALL);
+        everything.add(gs.STONE);
+        everything.add(gs.GEM);
+        everything.add(gs.PORTAL);
+        everything.add(gs.GROUND);
+        bugFinder = new PathFinder(everything);
 
         currentPath = new ArrayList();
         remainingGems = getRemainingGems(so);
@@ -86,7 +98,14 @@ public class Patrick extends BaseAgent {
                 if(currentPos.hasNext()) {
                     Node next = currentPos.next();
 
-                    action = nextMove(next.position);
+                    // Comprobar si no estamos en peligro de ser el próximo Garcilaso:
+                    if(garcilaso(next.position)) {
+                        System.out.println("GARCILASOOOOOO");
+                        action = Types.ACTIONS.ACTION_NIL;
+                    }
+                    else {
+                        action = nextMove(next.position);
+                    }
 
                     // Comprobar si nos movemos a la siguiente casilla o simplemente cambiamos de orientación:
                     checkMove(action);
@@ -103,6 +122,8 @@ public class Patrick extends BaseAgent {
             Thread.sleep(100);
         }
         catch (InterruptedException e) {}
+
+        System.out.println(gs.get(19.0, 3.0));
 
         return action;
     }
@@ -178,7 +199,8 @@ public class Patrick extends BaseAgent {
         if ((action == Types.ACTIONS.ACTION_RIGHT && ori != Orientation.E) ||
                 (action == Types.ACTIONS.ACTION_UP && ori != Orientation.N) ||
                 (action == Types.ACTIONS.ACTION_LEFT && ori != Orientation.W) ||
-                (action == Types.ACTIONS.ACTION_DOWN && ori != Orientation.S))
+                (action == Types.ACTIONS.ACTION_DOWN && ori != Orientation.S) ||
+                (action == Types.ACTIONS.ACTION_NIL))
         {
             currentPos.previous();
         }
@@ -197,9 +219,10 @@ public class Patrick extends BaseAgent {
         for (int i = 0; i < enemies.length; i++) {
             for (Observation obs : enemies[i]) {
                 int d = player.getManhattanDistance(obs);
+                boolean caught = bugCaught(stateObs, obs);
 
                 // Enemigo en zona de peligro
-                if (d <= 2) {
+                if (d <= 2 && !caught) {
                     // Estamos en peligro:
                     System.out.println("En peligro");
                     danger = true;
@@ -264,6 +287,38 @@ public class Patrick extends BaseAgent {
         }
 
         return action;
+    }
+
+    private boolean bugCaught(StateObservation stateObs, Observation bug) {
+
+        Vector2d bugPos = new Vector2d(bug.getX(), bug.getY());
+
+        bugFinder.run(stateObs);
+        ArrayList<Node> bugPath = bugFinder.getPath(bugPos, gs.playerPosition());
+
+        if(bugPath == null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+
+    // Comprueba si Patrick planea emular la grandiosa muerte de Garcilaso de la Vega:
+    private boolean garcilaso(Vector2d pos) {
+        Observation obs = gs.get(pos);
+
+        System.out.println(obs);
+
+        if(obs.getType() == ObservationType.BOULDER && gs.rockAbove(pos)) {
+            // No caigas en la trampa mortal:
+            System.out.println("GARCILASO");
+            reroute = true;
+            return true;
+        }
+
+        return false;
     }
 }
 
