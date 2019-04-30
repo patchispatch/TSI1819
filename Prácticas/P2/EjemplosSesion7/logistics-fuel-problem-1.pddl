@@ -4,8 +4,7 @@
 ;; citya cityb cityc cityd city
 (:objects citya cityb cityc cityd - city
           truck1 - truck
-          pack1 pack2 pack3 - obj 
-          
+          pack1 pack2 pack3 - obj
           )
 (:init
 
@@ -34,5 +33,5 @@
 (:goal (and (at pack1 cityd)
             (at pack2 cityd)
             (at pack3 cityd) ))
-        
+
 )

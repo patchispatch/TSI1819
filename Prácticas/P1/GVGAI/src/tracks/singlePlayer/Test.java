@@ -26,7 +26,7 @@ public class Test {
         String sampleOLETSController = "tracks.singlePlayer.advanced.olets.Agent";
 
         // Patrick:
-        String patrick = "practica_busqueda.Patrick";
+        String patrick = "practica_busqueda.Agent";
 
         // Determinar si actúa el agente o el jugador:
         boolean juego_yo = false;
@@ -41,7 +41,7 @@ public class Test {
 
         // Game and level to play
         int gameIdx = 11;
-        int levelIdx = 2; // level names from 0 to 4 (game_lvlN.txt).
+        int levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
         String gameName = games[gameIdx][1];
         String game = games[gameIdx][0];
         String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx);

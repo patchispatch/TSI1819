@@ -1,0 +1,9 @@
+\BOOKMARK [1][-]{section.1}{Descripci\363n general de la soluci\363n}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Comportamiento actual}{section.1}% 2
+\BOOKMARK [3][-]{subsubsection.1.1.1}{Clase GameState}{subsection.1.1}% 3
+\BOOKMARK [3][-]{subsubsection.1.1.2}{Pathfinder}{subsection.1.1}% 4
+\BOOKMARK [3][-]{subsubsection.1.1.3}{Coger gemas e ir al portal}{subsection.1.1}% 5
+\BOOKMARK [3][-]{subsubsection.1.1.4}{Esquivar bichos}{subsection.1.1}% 6
+\BOOKMARK [3][-]{subsubsection.1.1.5}{Buffer de movimientos}{subsection.1.1}% 7
+\BOOKMARK [2][-]{subsection.1.2}{Ideas sobre posibles mejoras}{section.1}% 8
+\BOOKMARK [1][-]{section.2}{Conclusiones}{}% 9

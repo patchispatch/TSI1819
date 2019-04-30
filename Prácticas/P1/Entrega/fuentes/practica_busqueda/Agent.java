@@ -14,7 +14,7 @@ import java.util.Vector;
 
 import javax.swing.plaf.nimbus.State;
 
-public class Patrick extends BaseAgent {
+public class Agent extends BaseAgent {
 
     // Atributos:
     PathFinder pf;
@@ -34,7 +34,7 @@ public class Patrick extends BaseAgent {
     Types.ACTIONS bufferedAction;
 
     // Constructor:
-    public Patrick(StateObservation so, ElapsedCpuTimer elapsedTimer) {
+    public Agent(StateObservation so, ElapsedCpuTimer elapsedTimer) {
         super(so, elapsedTimer);
 
         // Enemigos: murciélagos y escorpiones
@@ -100,7 +100,6 @@ public class Patrick extends BaseAgent {
 
                     // Comprobar si no estamos en peligro de ser el próximo Garcilaso:
                     if(garcilaso(next.position)) {
-                        System.out.println("GARCILASOOOOOO");
                         action = Types.ACTIONS.ACTION_NIL;
                     }
                     else {
@@ -313,7 +312,6 @@ public class Patrick extends BaseAgent {
 
         if(obs.getType() == ObservationType.BOULDER && gs.rockAbove(pos)) {
             // No caigas en la trampa mortal:
-            System.out.println("GARCILASO");
             reroute = true;
             return true;
         }
