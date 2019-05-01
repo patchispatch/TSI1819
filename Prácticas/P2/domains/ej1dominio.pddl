@@ -51,6 +51,7 @@
     )
   )
 
+  ; Dejar un objeto en el suelo:
   (:action DROP
     :parameters (?p - player ?o - object ?r - room)
     :precondition (AND
@@ -63,9 +64,141 @@
       (at ?r ?o)            ; El objeto está en la sala
       (on_floor ?o)         ; El objeto está en el suelo
     )
-
   )
 
+  ; Darle un objeto a un personaje:
+  (:action GIVE
+    :parameters (?p - player ?o - object ?r - room ?n - npc)
+    :precondition (AND
+      (at ?r ?p)            ; El NPC está en la sala r
+      (at ?r ?n)            ; El NPC está en la sala r
+      (has_object ?p)       ; El jugador tiene un objeto
+      (NOT(has_object ?n))  ; El NPC no tiene un objeto
+    )
 
+    :effect (AND
+      (not(has_object ?p))  ; El jugador ya no tiene un objeto
+      (has_object ?n)       ; El NPC tiene un objeto
+    )
+  )
 
+  ; Moverse a la casilla enfrente del jugador:
+  (:action GO
+    :parameters (?p - player ?r1 ?r2 - room ?o - orientation)
+    :precondition (AND
+      (at ?r1 ?p)
+      (path ?r1 ?r2 ?o)
+      (compass ?o)
+    )
+
+    :effect (AND
+      (not(at ?r1 ?p))
+      (at ?r2 ?p)
+    )
+  )
+
+  ; Girar 180 grados:
+  (:action TURN_180
+    :parameters (?o - orientation)
+    :precondition (
+        (compass ?o)
+    )
+
+    :effect (AND
+      (WHEN (= ?o n)
+        (AND
+          (compass s)
+          (NOT(compass n))
+        )
+      )
+      (WHEN (= ?o e)
+        (AND
+          (compass w)
+          (NOT(compass e))
+        )
+      )
+      (WHEN (= ?o s)
+        (AND
+          (compass n)
+          (NOT(compass s))
+        )
+      )
+      (WHEN (= ?o w)
+        (AND
+          (compass e)
+          (NOT(compass w))
+        )
+      )
+    )
+  )
+
+  ; Girar a la izquierda:
+  (:action TURN_LEFT
+    :parameters (?o - orientation)
+    :precondition (AND
+      (compass ?o)
+    )
+
+    :effect (AND
+      (WHEN (= ?o n)
+        (AND
+          (compass w)
+          (NOT(compass n))
+        )
+      )
+      (WHEN (= ?o e)
+        (AND
+          (compass n)
+          (NOT(compass e))
+        )
+      )
+      (WHEN (= ?o s)
+        (AND
+          (compass e)
+          (NOT(compass s))
+        )
+      )
+      (WHEN (= ?o w)
+        (AND
+          (compass s)
+          (NOT(compass w))
+        )
+      )
+    )
+  )
+
+  ; Girar a la izquierda:
+  (:action TURN_RIGHT
+    :parameters (?o - orientation)
+    :precondition (AND
+      (compass ?o)
+    )
+
+    :effect (AND
+      (WHEN (= ?o n)
+        (AND
+          (compass e)
+          (NOT(compass n))
+        )
+      )
+      (WHEN (= ?o e)
+        (AND
+          (compass s)
+          (NOT(compass e))
+        )
+      )
+      (WHEN (= ?o s)
+        (AND
+          (compass w)
+          (NOT(compass s))
+        )
+      )
+      (WHEN (= ?o w)
+        (AND
+          (compass n)
+          (NOT(compass w))
+        )
+      )
+    )
+  )
 )
