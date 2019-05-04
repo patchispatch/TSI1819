@@ -100,10 +100,7 @@
   ; Girar 180 grados:
   (:action TURN_180
     :parameters (?o - orientation)
-    :precondition (
-        (compass ?o)
-    )
-
+    :precondition (AND (compass ?o))
     :effect (AND
       (WHEN (= ?o n)
         (AND
@@ -131,7 +128,7 @@
       )
     )
   )
-
+  
   ; Girar a la izquierda:
   (:action TURN_LEFT
     :parameters (?o - orientation)
