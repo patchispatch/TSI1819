@@ -27,6 +27,7 @@
   (:predicates
     (at ?r - room ?l - locatable)           ; Habitación en la que se encuentra un locatable
     (on_floor ?o - object)                  ; Objeto se encuentra en el suelo
+    (on_hand ?o - object)                   ; Objeto se encuentra en las manos del jugador
     (compass ?o - orientation)              ; Orientación del jugador
     (path ?r1 ?r2 - room ?o - orientation)  ; Hay un camino entre r1 y r2 con orientación o
     (has_object ?c - character)             ; El personaje tiene un objeto
@@ -46,6 +47,7 @@
 
     :effect (AND
       (has_object ?p)       ; El jugador tiene un objeto
+      (on_hand ?o)
       (NOT(at ?r ?o))       ; El objeto ya no está en la sala
       (NOT(on_floor ?o))    ; El objeto ya no está en el suelo
     )
@@ -56,11 +58,13 @@
     :parameters (?p - player ?o - object ?r - room)
     :precondition (AND
       (has_object ?p)       ; El jugador tiene un objeto
+      (on_hand ?o)
       (at ?r ?p)            ; El jugador está en una sala
     )
 
     :effect (AND
       (NOT(has_object ?p))  ; El jugador ya no tiene un objeto
+      (NOT(on_hand ?o))
       (at ?r ?o)            ; El objeto está en la sala
       (on_floor ?o)         ; El objeto está en el suelo
     )
@@ -73,11 +77,13 @@
       (at ?r ?p)            ; El NPC está en la sala r
       (at ?r ?n)            ; El NPC está en la sala r
       (has_object ?p)       ; El jugador tiene un objeto
+      (on_hand ?o)
       (NOT(has_object ?n))  ; El NPC no tiene un objeto
     )
 
     :effect (AND
       (not(has_object ?p))  ; El jugador ya no tiene un objeto
+      (not(on_hand ?o))
       (has_object ?n)       ; El NPC tiene un objeto
     )
   )
@@ -128,7 +134,7 @@
       )
     )
   )
-  
+
   ; Girar a la izquierda:
   (:action TURN_LEFT
     :parameters (?o - orientation)

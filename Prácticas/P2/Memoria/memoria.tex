@@ -114,6 +114,20 @@ tenemos algo así:
 
 A ver cómo lo soluciono... De momento voy a comer.
 
+\bigskip
+
+\textbf{[Actualización - 19:30]}
+
+Después de procrastinar un buen rato (y jugar otro rato a Persona 5), me he dado cuenta de que el dominio no
+estaba mal del todo. Patrick cogía sus objetos y los entregaba bien, pero no sabía qué objeto tenía ni daba.
+Lo he solucionado añadiendo un predicado más, \texttt{on\_hand}, que viene explicado en su sitio.
+
+\medskip
+
+Acabo de caer en una cosa... Si Belkan es el personaje, y nuestro jugador se llama Patrick, 
+¿son estos los extraños mundos de Patrick? 
+En fin, voy a ponerme con el generador de problemas, a ver si marcha. 
+
 \medskip
 
 \texttt{Continuará...}
@@ -128,7 +142,7 @@ A ver cómo lo soluciono... De momento voy a comer.
 
 Definir  un  dominio y  problema de  planificación considerando  que  el  jugador podrá    estar  orientado  al  norte,  sur,  este  u  oeste  y  desplazarse  de  una  zona  a  otra siempre  que  esté  correctamente  orientado.  Por  ejemplo,  podrá  desplazarse  a  una zona  al  norte  de  su  zona  actual,  si  está  orientado  al  norte.
 
-\subsubsection*{A: representar en el dominio los objetos del mundo}
+\subsubsection{A: representar en el dominio los objetos del mundo}
 
 Para representar los objetos del mundo (jugador, personajes, objetos, habitaciones, caminos, etc.) se han establecido
 los siguientes tipos, con su jerarquía:
@@ -149,7 +163,7 @@ los siguientes tipos, con su jerarquía:
 
 \textbf{room:} habitación del dominio.
 
-\subsubsection*{B: representar predicados que permitan describir los estados del mundo}
+\subsubsection{B: representar predicados que permitan describir los estados del mundo}
 
 Se han considerado los siguientes predicados:
 
@@ -202,11 +216,21 @@ se encuentra con una orientación \texttt{?o} respecto de la primera.
 
 \smallskip
 
-Un personaje \texttt{?c} tiene un objeto. 
+Un personaje \texttt{?c} tiene un objeto.
+
+\medskip
+
+\large{\textbf{on\_hand}}
+
+\texttt{(on\_hand ?o - object)}
+
+\smallskip
+
+El jugador tiene un objeto \texttt{?o} en la mano.
 
 \newpage
 
-\subsubsection*{C:representar las siguientes acciones del jugador: girar a la izquierda, girar a la derecha, ir, coger, dejar, entregar}
+\subsubsection{C: representar las siguientes acciones del jugador: girar a la izquierda, girar a la derecha, ir, coger, dejar, entregar}
 
 \large{\textbf{Girar a la izquierda}}
 
