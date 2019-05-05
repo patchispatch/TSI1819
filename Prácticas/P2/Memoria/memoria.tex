@@ -1,0 +1,305 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}	%Idioma
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx} %Añadir imágenes
+\usepackage{geometry}	%Ajustar márgenes
+\usepackage[export]{adjustbox}[2011/08/13]
+\usepackage{float}
+\restylefloat{table}
+\usepackage{hyperref}
+\usepackage{titling}
+\usepackage{minted}
+\usepackage{multicol}
+%Opciones de encabezado y pie de página:
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{}
+%\rhead{}
+\lfoot{Técnicas de los Sistemas Inteligentes}
+\cfoot{}
+\rfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+%Opciones de fuente:
+\renewcommand{\familydefault}{\sfdefault}
+\setlength{\parindent}{0pt}
+\setlength{\headheight}{15pt}
+\setlength{\voffset}{10mm}
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+\usepackage{listings}
+
+\pretitle{%
+  \centering
+  \LARGE
+  \includegraphics[scale=0.5]{img/logo.png}\\[\bigskipamount]
+}
+\posttitle{\begin{center} \end{center}}
+
+\author{	Juan Ocaña Valenzuela}
+\title{\textbf{Práctica 2: planificación clásica en PDDL}}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\maketitle
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Diario de trabajo}
+
+\subsection*{Domingo, 5 de mayo de 2019}
+Empecé la práctica hace unos días, pero no ha sido hasta hoy que he decidido comenzar a documentarla.
+Llevaba unos días bastante ocupado (la fiesta de la Escuela no se organiza sola), y tenía visita en casa, así que dedicaba
+relativamente poco espacio de mi sistema nervioso central a pensar en los apasionantes mundos de Belkan, más allá de la 
+eterna duda: ¿es Belkan el personaje? ¿es el nombre del mundo? ¿o quizá un ser omnipresente que gobierna por aquellos lares?
+
+
+Una vez mi visita se marchó, comencé a plantear el primer ejercicio de la relación, diseñando un mapa, poniendo cosas en él,
+definiendo las acciones y todo eso. Una vez creí haber terminado el modesto problema 1, en el cual cada personaje debe tener un
+objeto, ejecuté FF y...
+
+
+\textbf{no funcionaba.}
+
+\bigskip
+
+No encontraba un plan. No lo encontraba y no sabía por qué. Estaba cansado y no me apetecía hacer nada, así que mandé a la
+mierda los estrafalarios mundos de Belkan y me puse a jugar a Persona 5.
+
+\medskip
+
+Hoy es un día nuevo, y nada más levantarme y desayunar he pensado que quizás podría hacer un pequeño esfuerzo por saber 
+qué le pasaba a mi problema, y cómo arreglarlo. Y es que nuestro pequeño bicho no puede entregar objetos a los personajes
+si no lo hemos definido en el problema. Qué cosas, eh.
+
+\medskip
+
+Bautizado como Patrick Dotimas (Patrick para los amigos), ahora que está en el problema encuentra una solución.
+Ya tenemos un problema resuelto... O no.
+
+\medskip
+
+Observando el plan, resulta que, en un acto de amor incondicional, Patrick se entrega a sí mismo a los personajes, y no los
+objetos que coge. En lugar de algo como:
+
+\medskip
+\begin{center}
+\texttt{GIVE PATRICK ROSE R20 PRINCESS}
+\end{center}
+
+\medskip
+
+tenemos algo así:
+
+\medskip
+\begin{center}
+\texttt{GIVE PATRICK PATRICK R20 PRINCESS}
+\end{center}
+
+\medskip
+
+A ver cómo lo soluciono... De momento voy a comer.
+
+\medskip
+
+\texttt{Continuará...}
+
+\section{Leyenda}
+
+\texttt{TO DO}.
+
+\section{Ejercicios}
+
+\subsection{Ejercicio 1}
+
+Definir  un  dominio y  problema de  planificación considerando  que  el  jugador podrá    estar  orientado  al  norte,  sur,  este  u  oeste  y  desplazarse  de  una  zona  a  otra siempre  que  esté  correctamente  orientado.  Por  ejemplo,  podrá  desplazarse  a  una zona  al  norte  de  su  zona  actual,  si  está  orientado  al  norte.
+
+\subsubsection*{A: representar en el dominio los objetos del mundo}
+
+Para representar los objetos del mundo (jugador, personajes, objetos, habitaciones, caminos, etc.) se han establecido
+los siguientes tipos, con su jerarquía:
+
+\medskip
+
+\textbf{locatable:} elemento que se puede localizar en una posición.
+	
+\quad \textbf{character:} personaje.
+
+\quad \quad	\textbf{player:} jugador.
+
+\quad \quad \textbf{npc:} personaje no jugador.
+
+\quad \textbf{object:} objeto.
+
+\textbf{orientation:} orientación de un elemento.
+
+\textbf{room:} habitación del dominio.
+
+\subsubsection*{B: representar predicados que permitan describir los estados del mundo}
+
+Se han considerado los siguientes predicados:
+
+\medskip
+
+\large{\textbf{at}}
+
+\texttt{(at ?r - room ?l - locatable)}
+
+\smallskip
+
+Un elemento \texttt{?l} se encuentra en la habitación \texttt{?r}. 
+
+\medskip
+
+\large{\textbf{on\_floor}}
+
+\texttt{(on\_floor ?o - object)}
+
+\smallskip
+
+Un objeto \texttt{?o} se encuentra en el suelo. 
+
+\medskip
+
+\large{\textbf{compass}}
+
+\texttt{(compass ?o - orientation)}
+
+\smallskip
+
+La orientación del personaje es \texttt{?o}.
+
+\medskip
+
+\large{\textbf{path}}
+
+\texttt{(path ?r1 ?r2 - room ?o - orientation)}
+
+\smallskip
+
+Existe un camino entre \texttt{?r1} y \texttt{?r2}, en el que la segunda habitación
+se encuentra con una orientación \texttt{?o} respecto de la primera.
+
+\medskip
+
+\large{\textbf{has\_object}}
+
+\texttt{(has\_object ?c - character)}
+
+\smallskip
+
+Un personaje \texttt{?c} tiene un objeto. 
+
+\newpage
+
+\subsubsection*{C:representar las siguientes acciones del jugador: girar a la izquierda, girar a la derecha, ir, coger, dejar, entregar}
+
+\large{\textbf{Girar a la izquierda}}
+
+\texttt{(:action TURN\_LEFT)}
+
+\smallskip
+
+Dada una orientación, el jugador mirará a aquella a su izquierda:
+
+\begin{itemize}
+\item N $\rightarrow$ W
+\item W $\rightarrow$ S
+\item S $\rightarrow$ E
+\item E $\rightarrow$ N
+\end{itemize}
+
+\medskip
+
+\large{\textbf{Girar a la derecha}}
+
+\texttt{(:action TURN\_RIGHT)}
+
+\smallskip
+
+Dada una orientación, el jugador mirará a aquella a su derecha:
+
+\begin{itemize}
+\item N $\rightarrow$ E
+\item W $\rightarrow$ N
+\item S $\rightarrow$ W
+\item E $\rightarrow$ S
+\end{itemize}
+
+\medskip
+
+\large{\textbf{Girar 180 grados}}
+
+\texttt{(:action TURN\_180)}
+
+\smallskip
+
+Dada una orientación, el jugador mirará a aquella a su espalda:
+
+\begin{itemize}
+\item N $\rightarrow$ S
+\item W $\rightarrow$ E
+\item S $\rightarrow$ N
+\item E $\rightarrow$ W
+\end{itemize}
+
+\medskip
+
+\large{\textbf{Coger un objeto}}
+
+\texttt{(:action PICK)}
+
+\smallskip
+
+Si el jugador se encuentra en la misma habitación que un objeto y este se halla en el suelo,
+el jugador podrá cogerlo. El objeto dejará de estar en la habitación y en el suelo.
+
+\medskip
+
+\large{\textbf{Soltar un objeto}}
+
+\texttt{(:action DROP)}
+
+\smallskip
+
+Si el jugador tiene un objeto, lo soltará. El objeto pasará a estar en la misma habitación que el jugador,
+y en el suelo.
+
+\medskip
+
+\large{\textbf{Dar un objeto a un personaje}}
+
+\texttt{(:action GIVE)}
+
+\smallskip
+
+Si el jugador tiene un objeto, el npc no, y ambos se encuentran en la misma habitación, el jugador le dará 
+el objeto al npc. El jugador pasará a no tener objeto, y el npc sí lo hará. 
+
+\medskip
+\large{\textbf{Moverse a una habitación contigua}}
+
+\texttt{(:action GO)}
+
+\smallskip
+
+El jugador se moverá a la habitación hacia la que esté orientado.
+
+\medskip
+
+
+\end{document}

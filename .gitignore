@@ -25,3 +25,10 @@ hs_err_pid*
 # Práctica 2
 EjemplosSesion7
 Metric-FF
+
+# LaTeX
+*.toc
+*.synctex.gz
+*.aux
+*.log
+_minted*
