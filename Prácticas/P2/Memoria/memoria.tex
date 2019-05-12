@@ -26,7 +26,7 @@
 %Opciones de fuente:
 \renewcommand{\familydefault}{\sfdefault}
 \setlength{\parindent}{0pt}
-\setlength{\headheight}{15pt}
+\setlength{\headheight}{12pt}
 \setlength{\voffset}{10mm}
 
 % Custom colors
@@ -142,7 +142,11 @@ En fin, voy a ponerme con el generador de problemas, a ver si marcha.
 
 Definir  un  dominio y  problema de  planificación considerando  que  el  jugador podrá    estar  orientado  al  norte,  sur,  este  u  oeste  y  desplazarse  de  una  zona  a  otra siempre  que  esté  correctamente  orientado.  Por  ejemplo,  podrá  desplazarse  a  una zona  al  norte  de  su  zona  actual,  si  está  orientado  al  norte.
 
-\subsubsection{A: representar en el dominio los objetos del mundo}
+\subsubsection{Apartado A}
+
+\textbf{Representar en el dominio los objetos del mundo.}
+
+\bigskip
 
 Para representar los objetos del mundo (jugador, personajes, objetos, habitaciones, caminos, etc.) se han establecido
 los siguientes tipos, con su jerarquía:
@@ -163,7 +167,11 @@ los siguientes tipos, con su jerarquía:
 
 \textbf{room:} habitación del dominio.
 
-\subsubsection{B: representar predicados que permitan describir los estados del mundo}
+\subsubsection{Apartado B}
+
+\textbf{Representar predicados que permitan describir los estados del mundo.}
+
+\bigskip
 
 Se han considerado los siguientes predicados:
 
@@ -228,9 +236,11 @@ Un personaje \texttt{?c} tiene un objeto.
 
 El jugador tiene un objeto \texttt{?o} en la mano.
 
-\newpage
+\subsubsection{Apartado C}
 
-\subsubsection{C: representar las siguientes acciones del jugador: girar a la izquierda, girar a la derecha, ir, coger, dejar, entregar}
+\textbf{Representar las siguientes acciones del jugador: girar a la izquierda, girar a la derecha, ir, coger, dejar, entregar.}
+
+\bigskip
 
 \large{\textbf{Girar a la izquierda}}
 
@@ -325,5 +335,195 @@ El jugador se moverá a la habitación hacia la que esté orientado.
 
 \medskip
 
+\subsubsection{Apartado D}
+
+\textbf{Plantear un problema de planificación con un estado inicial con 25 zonas conectadas arbitrariamente en el que aparezcan situados los 5  personajes en distintas zonas y al menos 5 objetos. El objetivo de este problema consistirá en conseguir que todos los personajes  tengan al menos un objeto.}
+
+\bigskip
+
+El mapa planteado en este problema es el siguiente:
+
+\texttt{TO DO}
+
+\medskip
+
+El objetivo es que todos los personajes dispongan de un objeto, es decir, que se cumpla:
+
+\medskip
+
+(\texttt{AND}
+
+\quad \texttt{(has\_object leonardo)}
+
+\quad \texttt{(has\_object prince)}
+
+\quad \texttt{(has\_object princess)}
+
+\quad \texttt{(has\_object professor)}
+
+\quad \texttt{(has\_object witch)}
+
+)
+
+\bigskip
+
+El plan generado por FF es el siguiente:
+
+\begin{multicols}{3}
+0: TURN\_180 N
+        1: GO PATRICK R13 R18 S
+        
+        2: TURN\_180 S
+
+        
+        3: PICK PATRICK APPLE R18
+
+        4: TURN\_LEFT N
+
+        5: GO PATRICK R18 R17 W
+
+        6: GO PATRICK R17 R16 W
+
+        7: TURN\_RIGHT W
+
+        8: TURN\_RIGHT N
+
+        9: GO PATRICK R16 R17 E
+
+       10: TURN\_RIGHT E
+
+       11: GO PATRICK R17 R22 S
+
+       12: TURN\_LEFT S
+
+       13: GIVE PATRICK APPLE R22 WITCH
+
+       14: GO PATRICK R22 R23 E
+
+       15: GO PATRICK R23 R24 E
+
+       16: TURN\_LEFT E
+
+       17: GO PATRICK R24 R19 N
+
+       18: TURN\_RIGHT N
+
+       19: GO PATRICK R19 R20 E
+
+       20: TURN\_LEFT E
+
+       21: GO PATRICK R20 R15 N
+
+       22: TURN\_180 N
+
+       23: PICK PATRICK GOLD R15
+
+       24: GO PATRICK R15 R20 S
+
+       25: TURN\_180 S
+
+       26: TURN\_LEFT N
+
+       27: GO PATRICK R20 R19 W
+
+       28: TURN\_180 W
+
+       29: GIVE PATRICK GOLD R19 PROFESSOR
+
+       30: GO PATRICK R19 R20 E
+
+       31: TURN\_RIGHT E
+
+       32: GO PATRICK R20 R25 S
+
+       33: TURN\_180 S
+
+       34: PICK PATRICK ROSE R25
+
+       35: GO PATRICK R25 R20 N
+
+       36: TURN\_LEFT N
+
+       37: GO PATRICK R20 R19 W
+
+       38: TURN\_RIGHT W
+
+       39: GO PATRICK R19 R14 N
+
+       40: TURN\_LEFT N
+
+       41: GO PATRICK R14 R13 W
+
+       42: GO PATRICK R13 R12 W
+
+       43: GO PATRICK R12 R11 W
+
+       44: TURN\_RIGHT W
+
+       45: TURN\_RIGHT N
+
+       46: GIVE PATRICK ROSE R11 PRINCESS
+
+       47: GO PATRICK R11 R12 E
+
+       48: TURN\_LEFT E
+
+       49: GO PATRICK R12 R7 N
+
+       50: GO PATRICK R7 R2 N
+
+       51: TURN\_LEFT N
+
+       52: GO PATRICK R2 R1 W
+
+       53: TURN\_LEFT W
+
+       54: PICK PATRICK OSCAR R1
+
+       55: GO PATRICK R1 R6 S
+
+       56: TURN\_LEFT S
+
+       57: GO PATRICK R6 R7 E
+
+       58: TURN\_RIGHT E
+
+       59: GIVE PATRICK OSCAR R7 LEONARDO
+
+       60: GO PATRICK R7 R12 S
+
+       61: TURN\_LEFT S
+
+       62: GO PATRICK R12 R13 E
+
+       63: TURN\_LEFT E
+
+       64: GO PATRICK R13 R8 N
+
+       65: TURN\_RIGHT N
+
+       66: GO PATRICK R8 R9 E
+
+       67: TURN\_LEFT E
+
+       68: GO PATRICK R9 R4 N
+
+       69: TURN\_LEFT N
+
+       70: GO PATRICK R4 R3 W
+
+       71: TURN\_180 W
+
+       72: PICK PATRICK ALGORITHM R3
+
+       73: GO PATRICK R3 R4 E
+
+       74: TURN\_RIGHT E
+
+       75: GO PATRICK R4 R9 S
+
+       76: GIVE PATRICK ALGORITHM R9 PRINCE
+
+\end{multicols}
 
 \end{document}
