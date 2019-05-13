@@ -29,12 +29,20 @@
     (at ?r - room ?l - locatable)           ; Habitación en la que se encuentra un locatable
     (on_floor ?o - object)                  ; Objeto se encuentra en el suelo
 
+    (hand_empty)                            ; La mano del jugador no tiene nada
+    (bag_empty)                             ; La mochila del jugador está vacía
     (on_hand ?o - object)                   ; Objeto se encuentra en las manos del jugador
+    (on_bag ?o - object)                    ; Objeto se encuentra en la mochila del jugador
     (has_object ?c - character)             ; El personaje tiene un objeto
 
     (compass ?o - orientation)              ; Orientación del jugador
 
     (path ?r1 ?r2 - room ?o - orientation)  ; Hay un camino entre r1 y r2 con orientación o
+    (room_type ?r - room ?t - terrain)      ; Tipo de terreno de una sala
+
+    (has_shoes)                             ; El personaje lleva los zapatos en la mano o en la mochila
+    (has_bikini)                            ; El personaje lleva el bikini en la mano o en la mochila
+    (clothes ?o - object)                   ; El objeto es ropa.
   )
 
   ; Funciones:
@@ -87,6 +95,7 @@
       (at ?r ?n)            ; El NPC está en la sala r
       (has_object ?p)       ; El jugador tiene un objeto
       (on_hand ?o)          ; El jugador tiene el objeto en la mano
+      (NOT(clothes ?o))     ; El objeto no es ropa
       (NOT(has_object ?n))  ; El NPC no tiene un objeto
     )
 
@@ -100,12 +109,33 @@
   ; Moverse a la casilla enfrente del jugador:
   (:action GO
     :parameters (?p - player ?r1 ?r2 - room ?o - orientation)
-    :precondition (AND
-      (at ?r1 ?p)
-      (path ?r1 ?r2 ?o)
-      (compass ?o)
-    )
+    :precondition (OR
+      ; Bosque:
+      (AND
+        (at ?r1 ?p)
+        (path ?r1 ?r2 ?o)
+        (compass ?o)
+        (room_type ?r2 forest)
+        (has_shoes)
+      )
 
+      (AND
+        (at ?r1 ?p)
+        (path ?r1 ?r2 ?o)
+        (compass ?o)
+        (room_type ?r2 lake)
+        (has_bikini)
+      )
+
+      (AND
+        (at ?r1 ?p)
+        (path ?r1 ?r2 ?o)
+        (compass ?o)
+        (NOT(room_type ?r2 forest))
+        (NOT(room_type ?r2 lake))
+        (NOT(room_type ?r2 cliff))
+      )
+    )
     :effect (AND
       (not(at ?r1 ?p))
       (at ?r2 ?p)
@@ -212,6 +242,40 @@
           (NOT(compass w))
         )
       )
+    )
+  )
+
+  ; Guardar un objeto en la mochila:
+  (:action PUT_ON_BAG
+    :parameters (?o - object)
+    :precondition (AND
+      (NOT(hand_empty))
+      (on_hand ?o)
+      (bag_empty)
+    )
+
+    :effect (AND
+      (NOT(bag_empty))
+      (on_bag ?o)
+      (NOT(on_hand ?o))
+      (hand_empty)
+    )
+  )
+
+  ; Sacar un objeto de la mochila:
+  (:action GET_OF_BAG
+    :parameters (?o - object)
+    :precondition (AND
+      (hand_empty)
+      (NOT(bag_empty))
+      (on_bag ?o)
+    )
+
+    :effect (AND
+      (NOT(hand_empty))
+      (on_hand ?o)
+      (bag_empty)
+      (NOT(on_bag ?o))
     )
   )
 )
