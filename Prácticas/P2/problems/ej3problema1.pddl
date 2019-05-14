@@ -6,9 +6,9 @@
 ; ej2problema1.pddl
 ; Problema 1 para el dominio 2: encontrar un plan con un coste menor a 100.
 ; *****************************************************************************
-(define (problem belkan-e1p1)
+(define (problem belkan-e3p1)
 
-  (:domain e1-domain)
+  (:domain e3-domain)
 
   (:objects
     r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11 r12 r13
@@ -137,7 +137,7 @@
 
     ; -------------------------------------------
     ; Objetos:
-    (at r13 oscar) (on_floor oscar)
+    (at r1 oscar) (on_floor oscar)
     (at r3 algorithm) (on_floor algorithm)
     (at r15 gold) (on_floor gold)
     (at r18 apple) (on_floor apple)
@@ -150,6 +150,8 @@
     ; Jugador:
     (at r13 patrick)
     (compass n)
+    (hand_empty)
+    (bag_empty)
 
     ; -------------------------------------------
     ; Estado del juego:
@@ -158,13 +160,11 @@
 
   (:goal
     (AND
-      ;(at r14 patrick)
-      (on_hand oscar)
-      ;(has_object leonardo)
-      ;(has_object prince)
-      ;(has_object princess)
-      ;(has_object professor)
-      ;(has_object witch)
+      (has_object leonardo)
+      (has_object prince)
+      (has_object princess)
+      (has_object professor)
+      (has_object witch)
       ;(<= (total_cost) 100)
     )
   )

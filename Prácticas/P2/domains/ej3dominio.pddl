@@ -3,11 +3,11 @@
 ; Práctica 2 - Planificación clásica en PDDL.
 ; Autor: Juan Ocaña Valenzuela
 ;
-; ej1dominio.pddl
+; ej3dominio.pddl
 ; Definición del dominio para los problemas del ejercicio 1.
 ; *****************************************************************************
 
-(define (domain e1-domain)
+(define (domain e3-domain)
   ; Requisitos:
   (:requirements
     :strips
