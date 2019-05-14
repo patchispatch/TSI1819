@@ -137,7 +137,7 @@
 
     ; -------------------------------------------
     ; Objetos:
-    (at r1 oscar) (on_floor oscar)
+    (at r16 oscar) (on_floor oscar)
     (at r3 algorithm) (on_floor algorithm)
     (at r15 gold) (on_floor gold)
     (at r18 apple) (on_floor apple)
