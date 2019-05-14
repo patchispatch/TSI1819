@@ -137,14 +137,14 @@
 
     ; -------------------------------------------
     ; Objetos:
-    (at r1 oscar) (on_floor oscar)
+    (at r13 oscar) (on_floor oscar)
     (at r3 algorithm) (on_floor algorithm)
     (at r15 gold) (on_floor gold)
     (at r18 apple) (on_floor apple)
     (at r25 rose) (on_floor rose)
 
-    (at r18 bikini) (on_floor bikini)
-    (at r24 shoes) (on_floor shoes)
+    (at r13 bikini) (on_floor bikini) (clothes bikini)
+    (at r24 shoes) (on_floor shoes) (clothes shoes)
 
     ; -------------------------------------------
     ; Jugador:
@@ -158,7 +158,8 @@
 
   (:goal
     (AND
-      (at r18 patrick)
+      ;(at r14 patrick)
+      (on_hand oscar)
       ;(has_object leonardo)
       ;(has_object prince)
       ;(has_object princess)

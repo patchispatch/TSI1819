@@ -59,12 +59,10 @@
       (on_floor ?o)         ; El objeto está en el suelo
       (at ?r ?p)            ; El jugador está en la sala r
       (at ?r ?o)            ; El objeto está en la sala r
-      (NOT(has_object ?p))  ; El jugador no tiene ningún objeto
       (hand_empty)          ; El jugador tiene la mano vacía
     )
 
     :effect (AND
-      (has_object ?p)       ; El jugador tiene un objeto
       (on_hand ?o)          ; El jugador tiene un objeto en la mano
       (NOT(at ?r ?o))       ; El objeto ya no está en la sala
       (NOT(on_floor ?o))    ; El objeto ya no está en el suelo
@@ -84,7 +82,6 @@
     :parameters (?p - player ?o - object ?r - room)
     :precondition (OR
       (AND
-        (has_object ?p)               ; El jugador tiene un objeto
         (on_hand ?o)                  ; El jugador lo tiene en la mano
         (at ?r ?p)                    ; El jugador está en una sala
         (NOT(hand_empty))             ; El jugador tiene la mano ocupada
@@ -94,7 +91,6 @@
       )
 
       (AND
-        (has_object ?p)          ; El jugador tiene un objeto
         (on_hand ?o)             ; El jugador lo tiene en la mano
         (at ?r ?p)               ; El jugador está en una sala
         (NOT(hand_empty))        ; El jugador tiene la mano ocupada
@@ -103,7 +99,6 @@
       )
 
       (AND
-        (has_object ?p)          ; El jugador tiene un objeto
         (on_hand ?o)             ; El jugador lo tiene en la mano
         (at ?r ?p)               ; El jugador está en una sala
         (NOT(hand_empty))        ; El jugador tiene la mano ocupada
@@ -113,14 +108,18 @@
 
     )
 
-
-
     :effect (AND
-      (NOT(has_object ?p))  ; El jugador ya no tiene un objeto
       (NOT(on_hand ?o))     ; El jugador no tiene el objeto en la mano
       (at ?r ?o)            ; El objeto está en la sala
       (on_floor ?o)         ; El objeto está en el suelo
       (hand_empty)          ; El jugador tiene la mano vacía
+
+      (WHEN (= ?o bikini)
+        (NOT(has_bikini))
+      )
+      (WHEN (= ?o shoes)
+        (NOT(has_shoes))
+      )
     )
   )
 
@@ -130,7 +129,6 @@
     :precondition (AND
       (at ?r ?p)            ; El NPC está en la sala r
       (at ?r ?n)            ; El NPC está en la sala r
-      (has_object ?p)       ; El jugador tiene un objeto
       (on_hand ?o)          ; El jugador tiene el objeto en la mano
       (NOT(clothes ?o))     ; El objeto no es ropa
       (NOT(has_object ?n))  ; El NPC no tiene un objeto
@@ -138,7 +136,6 @@
     )
 
     :effect (AND
-      (not(has_object ?p))  ; El jugador ya no tiene un objeto
       (not(on_hand ?o))     ; El jugador no tiene el objeto en la mano
       (has_object ?n)       ; El NPC tiene un objeto
       (hand_empty)          ; El jugador tiene la mano vacía
@@ -149,6 +146,16 @@
   (:action GO
     :parameters (?p - player ?r1 ?r2 - room ?o - orientation)
     :precondition (OR
+      ; Otro:
+      (AND
+        (at ?r1 ?p)
+        (path ?r1 ?r2 ?o)
+        (compass ?o)
+        (NOT(room_type ?r2 forest))
+        (NOT(room_type ?r2 lake))
+        (NOT(room_type ?r2 cliff))
+      )
+
       ; Bosque:
       (AND
         (at ?r1 ?p)
@@ -158,21 +165,13 @@
         (has_shoes)
       )
 
+      ; Lago:
       (AND
         (at ?r1 ?p)
         (path ?r1 ?r2 ?o)
         (compass ?o)
         (room_type ?r2 lake)
         (has_bikini)
-      )
-
-      (AND
-        (at ?r1 ?p)
-        (path ?r1 ?r2 ?o)
-        (compass ?o)
-        (NOT(room_type ?r2 forest))
-        (NOT(room_type ?r2 lake))
-        (NOT(room_type ?r2 cliff))
       )
     )
     :effect (AND
