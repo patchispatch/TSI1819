@@ -158,11 +158,12 @@
 
   (:goal
     (AND
-      (has_object leonardo)
-      (has_object prince)
-      (has_object princess)
-      (has_object professor)
-      (has_object witch)
+      (at r18 patrick)
+      ;(has_object leonardo)
+      ;(has_object prince)
+      ;(has_object princess)
+      ;(has_object professor)
+      ;(has_object witch)
       ;(<= (total_cost) 100)
     )
   )

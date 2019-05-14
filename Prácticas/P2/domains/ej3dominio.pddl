@@ -60,30 +60,67 @@
       (at ?r ?p)            ; El jugador está en la sala r
       (at ?r ?o)            ; El objeto está en la sala r
       (NOT(has_object ?p))  ; El jugador no tiene ningún objeto
+      (hand_empty)          ; El jugador tiene la mano vacía
     )
 
     :effect (AND
       (has_object ?p)       ; El jugador tiene un objeto
-      (on_hand ?o)
+      (on_hand ?o)          ; El jugador tiene un objeto en la mano
       (NOT(at ?r ?o))       ; El objeto ya no está en la sala
       (NOT(on_floor ?o))    ; El objeto ya no está en el suelo
+      (NOT(hand_empty))     ; El jugador tiene la mano ocupada
+
+      (WHEN (= ?o bikini)
+        (has_bikini)        ; Equipamos el bikini
+      )
+      (WHEN (= ?o shoes)
+        (has_shoes)         ; Equipamos los zapatos
+      )
     )
   )
 
   ; Dejar un objeto en el suelo:
   (:action DROP
     :parameters (?p - player ?o - object ?r - room)
-    :precondition (AND
-      (has_object ?p)       ; El jugador tiene un objeto
-      (on_hand ?o)
-      (at ?r ?p)            ; El jugador está en una sala
+    :precondition (OR
+      (AND
+        (has_object ?p)               ; El jugador tiene un objeto
+        (on_hand ?o)                  ; El jugador lo tiene en la mano
+        (at ?r ?p)                    ; El jugador está en una sala
+        (NOT(hand_empty))             ; El jugador tiene la mano ocupada
+        (NOT(room_type ?r cliff))     ; La siguiente sala no es acantilado
+        (NOT(room_type ?r forest))    ; La siguiente sala no es bosque
+        (NOT(room_type ?r lake))      ; La siguiente sala no es lago
+      )
+
+      (AND
+        (has_object ?p)          ; El jugador tiene un objeto
+        (on_hand ?o)             ; El jugador lo tiene en la mano
+        (at ?r ?p)               ; El jugador está en una sala
+        (NOT(hand_empty))        ; El jugador tiene la mano ocupada
+        (room_type ?r forest)    ; La siguiente sala es bosque
+        (NOT(= ?o shoes))        ; El objeto a soltar no son los zapatos
+      )
+
+      (AND
+        (has_object ?p)          ; El jugador tiene un objeto
+        (on_hand ?o)             ; El jugador lo tiene en la mano
+        (at ?r ?p)               ; El jugador está en una sala
+        (NOT(hand_empty))        ; El jugador tiene la mano ocupada
+        (room_type ?r lake)      ; La siguiente sala es lago
+        (NOT(= ?o bikini))       ; El objeto a soltar no es el bikini
+      )
+
     )
+
+
 
     :effect (AND
       (NOT(has_object ?p))  ; El jugador ya no tiene un objeto
-      (NOT(on_hand ?o))
+      (NOT(on_hand ?o))     ; El jugador no tiene el objeto en la mano
       (at ?r ?o)            ; El objeto está en la sala
       (on_floor ?o)         ; El objeto está en el suelo
+      (hand_empty)          ; El jugador tiene la mano vacía
     )
   )
 
@@ -97,12 +134,14 @@
       (on_hand ?o)          ; El jugador tiene el objeto en la mano
       (NOT(clothes ?o))     ; El objeto no es ropa
       (NOT(has_object ?n))  ; El NPC no tiene un objeto
+      (NOT(hand_empty))     ; El jugador tiene la mano ocupada
     )
 
     :effect (AND
       (not(has_object ?p))  ; El jugador ya no tiene un objeto
-      (not(on_hand ?o))
+      (not(on_hand ?o))     ; El jugador no tiene el objeto en la mano
       (has_object ?n)       ; El NPC tiene un objeto
+      (hand_empty)          ; El jugador tiene la mano vacía
     )
   )
 
