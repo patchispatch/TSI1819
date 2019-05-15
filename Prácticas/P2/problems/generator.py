@@ -16,7 +16,7 @@ def main():
     num_zones = 0
     problem_name = ""
     domain_name = ""
-    map_elements = defaultdict()
+    map_elements = defaultdict(list())
     v_rel = list()
     h_rel = list()
 
@@ -60,13 +60,37 @@ def main():
             e = i.replace("]", "[").split("[")
             rel.append(e[0])
 
-            obj = e[1].split("-")
-            map_elements[obj[1]] = obj[0]
+            if e[1] is not "":
+                obj = e[1].split("-")
+                map_elements[obj[1]] = obj[0]
 
+        for i in rel[:-1]:
+            pair = (i, i.next())
 
+            if mode is "v":
+                v_rel.append(pair)
+            else:
+                h_rel.append(pair)
 
+        rel.clear()
 
+    # Escribir:
+    file = open(p2, "w+")
 
+    # Nombre del problema:
+    file.write("(define (problem {} \n\n".format(problem_name))
 
+    # Nombre del dominio:
+    file.write("(:domain {}) \n\n".format(domain_name))
 
+    # Elementos del mapa:
+    file.write("(:objects")
 
+    stringo = ""
+    for type, value in map_elements.items():
+        for v in value:
+            stringo +=  str(v) + " "
+
+        stringo += "- " + str(type) + "\n"
+        file.write(stringo)
+        stringo.clear()
