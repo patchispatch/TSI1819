@@ -111,6 +111,8 @@ def main():
         file.write(stringo)
         stringo = ""
 
+    file.write("\nn e w s - orientation")
+
     file.write(")\n\n")
 
     # Situación inicial:

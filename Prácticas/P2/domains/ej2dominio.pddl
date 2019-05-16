@@ -7,7 +7,7 @@
 ; Definición del dominio para los problemas del ejercicio 1.
 ; *****************************************************************************
 
-(define (domain e1-domain)
+(define (domain e2-domain)
   ; Requisitos:
   (:requirements
     :strips
@@ -19,6 +19,7 @@
   (:types
     object character - locatable  ; Tiene posición
     player npc - character        ; Tipos de personaje
+    Bruja Principe Princesa Profesor Leonardo - npc
     orientation                   ; Orientación
     terrain                       ; Tipo de terreno
     room                          ; Zona del dominio
