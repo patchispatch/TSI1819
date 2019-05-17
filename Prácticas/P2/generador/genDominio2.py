@@ -117,7 +117,7 @@ def main():
         file.write(stringo)
         stringo = ""
 
-    file.write("n e w s - orientation")
+    file.write("n e w s - orientation\n")
 
     file.write(")\n\n")
 
@@ -125,7 +125,7 @@ def main():
     file.write("(:init\n\n")
 
     # Caminos:
-    file.write("; Caminos:\n")
+    file.write("\n; Caminos:\n")
 
     stringo = "(path {0} {1} n) (path {1} {0} s)" \
               "\n(= (distance {0} {1}) {2}) (= (distance {1} {0}) {2})\n\n"

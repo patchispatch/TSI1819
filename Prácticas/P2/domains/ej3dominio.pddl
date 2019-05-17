@@ -19,6 +19,7 @@
   (:types
     object character - locatable  ; Tiene posición
     player npc - character        ; Tipos de personaje
+    Bruja Principe Princesa Profesor Leonardo - npc
     orientation                   ; Orientación
     terrain                       ; Tipo de terreno
     room                          ; Zona del dominio
@@ -85,16 +86,16 @@
         (on_hand ?o)                  ; El jugador lo tiene en la mano
         (at ?r ?p)                    ; El jugador está en una sala
         (NOT(hand_empty))             ; El jugador tiene la mano ocupada
-        (NOT(room_type ?r cliff))     ; La siguiente sala no es acantilado
-        (NOT(room_type ?r forest))    ; La siguiente sala no es bosque
-        (NOT(room_type ?r lake))      ; La siguiente sala no es lago
+        (NOT(room_type ?r Precipicio))     ; La siguiente sala no es acantilado
+        (NOT(room_type ?r Bosque))    ; La siguiente sala no es bosque
+        (NOT(room_type ?r Agua))      ; La siguiente sala no es lago
       )
 
       (AND
         (on_hand ?o)             ; El jugador lo tiene en la mano
         (at ?r ?p)               ; El jugador está en una sala
         (NOT(hand_empty))        ; El jugador tiene la mano ocupada
-        (room_type ?r forest)    ; La siguiente sala es bosque
+        (room_type ?r Bosque)    ; La siguiente sala es bosque
         (NOT(= ?o shoes))        ; El objeto a soltar no son los zapatos
       )
 
@@ -102,7 +103,7 @@
         (on_hand ?o)             ; El jugador lo tiene en la mano
         (at ?r ?p)               ; El jugador está en una sala
         (NOT(hand_empty))        ; El jugador tiene la mano ocupada
-        (room_type ?r lake)      ; La siguiente sala es lago
+        (room_type ?r Agua)      ; La siguiente sala es lago
         (NOT(= ?o bikini))       ; El objeto a soltar no es el bikini
       )
 
@@ -151,9 +152,9 @@
         (at ?r1 ?p)
         (path ?r1 ?r2 ?o)
         (compass ?o)
-        (NOT(room_type ?r2 forest))
-        (NOT(room_type ?r2 lake))
-        (NOT(room_type ?r2 cliff))
+        (NOT(room_type ?r2 Bosque))
+        (NOT(room_type ?r2 Agua))
+        (NOT(room_type ?r2 Precipicio))
       )
 
       ; Bosque:
@@ -161,7 +162,7 @@
         (at ?r1 ?p)
         (path ?r1 ?r2 ?o)
         (compass ?o)
-        (room_type ?r2 forest)
+        (room_type ?r2 Bosque)
         (has_shoes)
       )
 
@@ -170,7 +171,7 @@
         (at ?r1 ?p)
         (path ?r1 ?r2 ?o)
         (compass ?o)
-        (room_type ?r2 lake)
+        (room_type ?r2 Agua)
         (has_bikini)
       )
     )
