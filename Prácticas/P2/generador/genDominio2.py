@@ -117,7 +117,7 @@ def main():
         file.write(stringo)
         stringo = ""
 
-    file.write("\nn e w s - orientation")
+    file.write("n e w s - orientation")
 
     file.write(")\n\n")
 
@@ -153,6 +153,9 @@ def main():
 
     # Orientación por defecto del jugador: norte
     file.write("\n\n; Orientación del jugador:\n(compass n)")
+
+    # Coste total inicial: 0:
+    file.write("\n\n; Coste inicial del plan:\n(= (total_cost) 0)")
 
     # Cierre del bloque init:
     file.write("\n)")

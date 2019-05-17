@@ -11,7 +11,6 @@ player1 - Player
 manzana1 - Manzana
 oscar1 - Oscar
 princesa1 - Princesa
-
 n e w s - orientation)
 
 (:init
@@ -55,8 +54,12 @@ n e w s - orientation)
 (at z7 princesa1)
 
 
+
 ; Orientación del jugador:
 (compass n)
+
+; Coste inicial del plan:
+(= (total_cost) 0)
 )
 
 ; Introduzca aquí sus objetivos:
