@@ -129,11 +129,11 @@
 
     ; -------------------------------------------
     ; Personajes:
-    (at r7 leonardo)
-    (at r9 prince)
-    (at r11 princess)
-    (at r19 professor)
-    (at r22 witch)
+    (at r7 leonardo) (= (stock leonardo) 0) (= (max_stock leonardo) 4)
+    (at r9 prince) (= (stock prince) 0) (= (max_stock prince) 3)
+    (at r11 princess) (= (stock princess) 0) (= (max_stock princess) 2)
+    (at r19 professor) (= (stock professor) 0) (= (max_stock professor) 1)
+    (at r22 witch) (= (stock witch) 0) (= (max_stock witch) 6)
 
     ; -------------------------------------------
     ; Objetos:
@@ -194,7 +194,7 @@
 
   (:goal
     (AND
-      (> (points_earned) 40)
+      (= (stock leonardo) 3)
       ;(has_object witch)
       ;(<= (total_cost) 100)
     )

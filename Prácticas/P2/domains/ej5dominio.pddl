@@ -53,6 +53,8 @@
     (distance ?r1 ?r2 - room)               ; Distancia entre dos zonas.
     (points_given ?ch - npc ?o - object)    ; Puntos dados por entregar el objeto o al personaje ch
     (points_earned)                         ; Puntos obtenidos por el jugador
+    (stock ?ch - npc)                       ; Bolsillos ocupados de un personaje
+    (max_stock ?ch - npc)                   ; Bolsillos totales de un personaje
   )
 
   ; Acciones:
@@ -131,19 +133,19 @@
   (:action GIVE
     :parameters (?p - player ?o - object ?r - room ?n - npc)
     :precondition (AND
-      (at ?r ?p)            ; El NPC está en la sala r
-      (at ?r ?n)            ; El NPC está en la sala r
-      (on_hand ?o)          ; El jugador tiene el objeto en la mano
-      (NOT(clothes ?o))     ; El objeto no es ropa
-      (NOT(has_object ?n))  ; El NPC no tiene un objeto
-      (NOT(hand_empty))     ; El jugador tiene la mano ocupada
+      (at ?r ?p)                       ; El NPC está en la sala r
+      (at ?r ?n)                       ; El NPC está en la sala r
+      (on_hand ?o)                     ; El jugador tiene el objeto en la mano
+      (NOT(clothes ?o))                ; El objeto no es ropa
+      (< (stock ?n) (max_stock ?n))    ; El NPC tiene hueco para guardar el objeto
+      (NOT(hand_empty))                ; El jugador tiene la mano ocupada
     )
 
     :effect (AND
-      (not(on_hand ?o))     ; El jugador no tiene el objeto en la mano
-      ;(has_object ?n)       ; El NPC tiene un objeto
-      (hand_empty)          ; El jugador tiene la mano vacía
-      (increase (points_earned) (points_given ?n ?o))
+      (not(on_hand ?o))                                ; El jugador no tiene el objeto en la mano
+      (hand_empty)                                     ; El jugador tiene la mano vacía
+      (increase (stock ?n) 1)                          ; El NPC ocupa un hueco más
+      (increase (points_earned) (points_given ?n ?o))  ; Incrementamos los puntos por entregar el objeto al NPC
     )
   )
 
