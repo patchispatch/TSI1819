@@ -11,13 +11,15 @@ player1 - Player
 manzana1 - Manzana
 oscar1 - Oscar
 princesa1 - Princesa
+bikini - Bikini
+zapato - Zapato
 n e w s - orientation
 Bosque Agua Precipicio Arena Piedra - terrain)
 
 (:init
 
 (room_type z1 Bosque)
-(room_type z2 Bosque)
+(room_type z2 Arena)
 (room_type z3 Arena)
 (room_type z4 Piedra)
 (room_type z5 Bosque)
@@ -62,10 +64,16 @@ Bosque Agua Precipicio Arena Piedra - terrain)
 
 (at z7 princesa1)
 
+(at z1 bikini)
+(at z2 zapato)
 
 
-; Orientación del jugador:
+
+; Situación inicial del jugador:
 (compass n)
+(hand_empty)
+(bag_empty)
+
 
 ; Coste inicial del plan:
 (= (total_cost) 0)
@@ -73,6 +81,6 @@ Bosque Agua Precipicio Arena Piedra - terrain)
 
 ; Introduzca aquí sus objetivos:
 (:goal
-  (has_object bruja1)
+  (at z1 player1)
 )
 )

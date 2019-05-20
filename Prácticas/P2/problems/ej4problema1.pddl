@@ -147,6 +147,39 @@
     (at r24 zapato) (on_floor zapato) (clothes zapato)
 
     ; -------------------------------------------
+    ; Tabla de Puntos:
+    (= (points_given leonardo oscar) 10)
+    (= (points_given leonardo rose) 1)
+    (= (points_given leonardo apple) 3)
+    (= (points_given leonardo algorithm) 4)
+    (= (points_given leonardo gold) 5)
+
+    (= (points_given princess oscar) 5)
+    (= (points_given princess rose) 10)
+    (= (points_given princess apple) 1)
+    (= (points_given princess algorithm) 3)
+    (= (points_given princess gold) 4)
+
+    (= (points_given witch oscar) 4)
+    (= (points_given witch rose) 5)
+    (= (points_given witch apple) 10)
+    (= (points_given witch algorithm) 1)
+    (= (points_given witch gold) 3)
+
+    (= (points_given professor oscar) 3)
+    (= (points_given professor rose) 4)
+    (= (points_given professor apple) 5)
+    (= (points_given professor algorithm) 10)
+    (= (points_given professor gold) 1)
+
+    (= (points_given prince oscar) 1)
+    (= (points_given prince rose) 3)
+    (= (points_given prince apple) 4)
+    (= (points_given prince algorithm) 5)
+    (= (points_given prince gold) 10)
+
+
+    ; -------------------------------------------
     ; Jugador:
     (at r13 patrick)
     (compass n)
@@ -156,14 +189,12 @@
     ; -------------------------------------------
     ; Estado del juego:
     (= (total_cost) 0)
+    (= (points_earned) 0)
   )
 
   (:goal
     (AND
-      (has_object leonardo)
-      (has_object prince)
-      (has_object princess)
-      (has_object professor)
+      (> (points_earned) 25)
       ;(has_object witch)
       ;(<= (total_cost) 100)
     )

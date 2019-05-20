@@ -15,6 +15,7 @@ def main():
     # Personajes:
     personajes = "Princesa Principe Bruja Profesor Leonardo Player"
     terrenos = "Bosque Agua Precipicio Arena Piedra"
+    ropa = ["Bikini", "Zapato"]
 
     # Variables:
     num_zones = 0
@@ -97,12 +98,18 @@ def main():
                 else:
                     h_rel.append(path)
 
-        print(rel)
         rel.clear()
 
     # Eliminar zonas repetidas:
     map_elements["room"] = sorted(set(map_elements["room"]))
     room_type = sorted(set(room_type))
+
+    # Comprobar que el bikini y el zapato están. Si no, introducirlos en la primera zona:
+    for i in ropa:
+        if i not in map_elements:
+            map_elements[i].append(i.lower())
+            op = (map_elements["room"][0], i.lower(), True)
+            objects_place.append(op)
 
     # Escribir:
     file = open(p2, "w+")
@@ -161,8 +168,10 @@ def main():
 
         file.write("\n")
 
-    # Orientación por defecto del jugador: norte
-    file.write("\n\n; Orientación del jugador:\n(compass n)")
+    # Situación por defecto del jugador:
+    file.write("\n\n; Situación inicial del jugador:\n(compass n)\n"
+               "(hand_empty)\n"
+               "(bag_empty)\n\n")
 
     # Coste total inicial: 0:
     file.write("\n\n; Coste inicial del plan:\n(= (total_cost) 0)")

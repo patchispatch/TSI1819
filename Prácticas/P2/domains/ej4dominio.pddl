@@ -42,15 +42,17 @@
     (path ?r1 ?r2 - room ?o - orientation)  ; Hay un camino entre r1 y r2 con orientación o
     (room_type ?r - room ?t - terrain)      ; Tipo de terreno de una sala
 
-    (has_zapato)                             ; El personaje lleva los zapatos en la mano o en la mochila
+    (has_zapato)                            ; El personaje lleva los zapatos en la mano o en la mochila
     (has_bikini)                            ; El personaje lleva el bikini en la mano o en la mochila
     (clothes ?o - object)                   ; El objeto es ropa.
   )
 
   ; Funciones:
   (:functions
-    (total_cost)                ; Coste total del plan calculado.
-    (distance ?r1 ?r2 - room)   ; Distancia entre dos zonas.
+    (total_cost)                            ; Coste total del plan calculado.
+    (distance ?r1 ?r2 - room)               ; Distancia entre dos zonas.
+    (points_given ?ch - npc ?o - object)    ; Puntos dados por entregar el objeto o al personaje ch
+    (points_earned)                         ; Puntos obtenidos por el jugador
   )
 
   ; Acciones:
@@ -141,6 +143,7 @@
       (not(on_hand ?o))     ; El jugador no tiene el objeto en la mano
       (has_object ?n)       ; El NPC tiene un objeto
       (hand_empty)          ; El jugador tiene la mano vacía
+      (increase (points_earned) (points_given ?n ?o))
     )
   )
 
