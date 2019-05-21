@@ -22,6 +22,7 @@ def main():
     problem_name = ""
     domain_name = ""
     map_elements = defaultdict(list)
+    bolsillos = defaultdict()
 
     room_type = list()
     objects_place = list()
@@ -53,6 +54,8 @@ def main():
     v = lines[0].split(":")
     num_zones = int(v[1])
     lines.pop(0)
+
+
 
     # Resto:
     mode = 0
@@ -167,6 +170,11 @@ def main():
             file.write(stringo2.format(p[1]))
 
         file.write("\n")
+
+    # Bolsillos de los personajes:
+    for type, value in bolsillos.items():
+        file.write("(= (max_stock {0} {1}))\n".format(type, value))
+        file.write("(= (stock {0} 0))\n".format(type))
 
     # Situación por defecto del jugador:
     file.write("\n\n; Situación inicial del jugador:\n(compass n)\n"
