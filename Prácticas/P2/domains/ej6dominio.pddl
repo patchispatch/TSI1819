@@ -158,7 +158,7 @@
       (AND
         (at ?r1 ?p)
         (path ?r1 ?r2 ?o)
-        (compass ?o)
+        (compass ?p ?o)
         (NOT(room_type ?r2 Bosque))
         (NOT(room_type ?r2 Agua))
         (NOT(room_type ?r2 Precipicio))
@@ -168,7 +168,7 @@
       (AND
         (at ?r1 ?p)
         (path ?r1 ?r2 ?o)
-        (compass ?o)
+        (compass ?p ?o)
         (room_type ?r2 Bosque)
         (has_zapato ?p)
       )
@@ -177,7 +177,7 @@
       (AND
         (at ?r1 ?p)
         (path ?r1 ?r2 ?o)
-        (compass ?o)
+        (compass ?p ?o)
         (room_type ?r2 Agua)
         (has_bikini ?p)
       )
@@ -191,31 +191,31 @@
 
   ; Girar 180 grados:
   (:action TURN_180
-    :parameters (?o - orientation)
-    :precondition (AND (compass ?o))
+    :parameters (?p - player ?o - orientation)
+    :precondition (AND (compass ?p ?o))
     :effect (AND
       (WHEN (= ?o n)
         (AND
-          (compass s)
-          (NOT(compass n))
+          (compass ?p s)
+          (NOT(compass ?p n))
         )
       )
       (WHEN (= ?o e)
         (AND
-          (compass w)
-          (NOT(compass e))
+          (compass ?p w)
+          (NOT(compass ?p e))
         )
       )
       (WHEN (= ?o s)
         (AND
-          (compass n)
-          (NOT(compass s))
+          (compass ?p n)
+          (NOT(compass ?p s))
         )
       )
       (WHEN (= ?o w)
         (AND
-          (compass e)
-          (NOT(compass w))
+          (compass ?p e)
+          (NOT(compass ?p w))
         )
       )
     )
@@ -223,34 +223,34 @@
 
   ; Girar a la izquierda:
   (:action TURN_LEFT
-    :parameters (?o - orientation)
+    :parameters (?p - player ?o - orientation)
     :precondition (AND
-      (compass ?o)
+      (compass ?p ?o)
     )
 
     :effect (AND
       (WHEN (= ?o n)
         (AND
-          (compass w)
-          (NOT(compass n))
+          (compass ?p w)
+          (NOT(compass ?p n))
         )
       )
       (WHEN (= ?o e)
         (AND
-          (compass n)
-          (NOT(compass e))
+          (compass ?p n)
+          (NOT(compass ?p e))
         )
       )
       (WHEN (= ?o s)
         (AND
-          (compass e)
-          (NOT(compass s))
+          (compass ?p e)
+          (NOT(compass ?p s))
         )
       )
       (WHEN (= ?o w)
         (AND
-          (compass s)
-          (NOT(compass w))
+          (compass ?p s)
+          (NOT(compass ?p w))
         )
       )
     )
@@ -258,34 +258,34 @@
 
   ; Girar a la izquierda:
   (:action TURN_RIGHT
-    :parameters (?o - orientation)
+    :parameters (?p - player ?o - orientation)
     :precondition (AND
-      (compass ?o)
+      (compass ?p ?o)
     )
 
     :effect (AND
-      (WHEN (= ?o n)
+      (WHEN (= ?o ?p n)
         (AND
-          (compass e)
-          (NOT(compass n))
+          (compass ?p e)
+          (NOT(compass ?p n))
         )
       )
       (WHEN (= ?o e)
         (AND
-          (compass s)
-          (NOT(compass e))
+          (compass ?p s)
+          (NOT(compass ?p e))
         )
       )
       (WHEN (= ?o s)
         (AND
-          (compass w)
-          (NOT(compass s))
+          (compass ?p w)
+          (NOT(compass ?p s))
         )
       )
       (WHEN (= ?o w)
         (AND
-          (compass n)
-          (NOT(compass w))
+          (compass ?p n)
+          (NOT(compass ?p w))
         )
       )
     )
@@ -293,7 +293,7 @@
 
   ; Guardar un objeto en la mochila:
   (:action PUT_ON_BAG
-    :parameters (?o - object)
+    :parameters (?p - player ?o - object)
     :precondition (AND
       (NOT(hand_empty))
       (on_hand ?o)
