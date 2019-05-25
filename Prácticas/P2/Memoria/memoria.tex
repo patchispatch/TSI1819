@@ -130,11 +130,43 @@ En fin, voy a ponerme con el generador de problemas, a ver si marcha.
 
 \medskip
 
-\texttt{Continuará...}
+\subsection*{Sábado, 11 de mayo de 2019}
+Tras la fiesta de la escuela uno se encuentra destrozado y libre a partes iguales, así que seguir con la práctica
+era una buena idea. Me puse con el parser de los dos primeros ejercicios, y tras darle algunas vueltas me creaba problemas 
+que deberían funcionar pero no lo hacían. ¿Por qué? Por los paréntesis. Siempre son los paréntesis.
+
+\subsection*{Miércoles, 15 de mayo de 2019}
+Los ejercicios tres y cuatro han sido fáciles, pero el parser del ejercicio cuatro me parece poco claro. 
+Según el enunciado hay que leer el número de puntos a conseguir, pero introducir la tabla de puntos en el problema no es tan
+trivial como parecía al prinicipio. En fin, es lo que hay.
+
+\subsection*{Domingo, 19 de mayo de 2019}
+Me he dado cuenta de que plantear los ejercicios en PDDL es más sencillo que hacer el parser en la mayoría de las ocasiones.
+Los ejercicios cinco y seis han consistido en modificar un par de cosas de los dominios anteriores, mientras que el parser cada
+vez se complica más (aunque tampoco demasiado).
+
+\subsection*{Martes, 21 de mayo de 2019}
+Doy por terminado el trabajo que voy a entregar. Podría hacer más, pero tengo más cosas que hacer y creo que es suficiente y funciona
+moderadamente bien.
+
+\subsection*{Miércoles, 22 de mayo de 2019}
+Procedo a documentar la práctica. Hay más trabajo del que parece, ya que hay que poner las cosas bonitas, dibujar un par de mapas, explicar los ejercicios, etc. Pero bueno, es echarle un rato. Lo peor ya ha pasado.
 
 \section{Leyenda}
 
-\texttt{TO DO}.
+En los mapas adjuntos se representan los elementos del dominio de la siguiente forma:
+
+\textbf{Objetos:} escritos en gris, sobre la zona en la que se encuentran.
+\textbf{Personajes:} escritos en negro, sobre la zona en la que se encuentran.
+\textbf{Distancia entre zonas:} representada sobre la unión de las zonas.
+\textbf{Tipo de zona:} representada por el color de la zona:
+\begin{itemize}
+\item \textbf{Azul:} agua.
+\item \textbf{Marrón claro:} arena.
+\item \textbf{Marrón oscuro:} piedra.
+\item \textbf{Gris oscuro:} precipicio.
+\item \textbf{Verde:} bosque.
+\end{itemize}
 
 \section{Ejercicios}
 
@@ -142,6 +174,8 @@ En fin, voy a ponerme con el generador de problemas, a ver si marcha.
 
 Definir  un  dominio y  problema de  planificación considerando  que  el  jugador podrá    estar  orientado  al  norte,  sur,  este  u  oeste  y  desplazarse  de  una  zona  a  otra siempre  que  esté  correctamente  orientado.  Por  ejemplo,  podrá  desplazarse  a  una zona  al  norte  de  su  zona  actual,  si  está  orientado  al  norte.
 
+\subsection{Mapa problema 1}
+\includegraphics[scale=0.5]{img/e1.png}
 \subsubsection{Apartado A}
 
 \textbf{Representar en el dominio los objetos del mundo.}
@@ -339,12 +373,6 @@ El jugador se moverá a la habitación hacia la que esté orientado.
 
 \textbf{Plantear un problema de planificación con un estado inicial con 25 zonas conectadas arbitrariamente en el que aparezcan situados los 5  personajes en distintas zonas y al menos 5 objetos. El objetivo de este problema consistirá en conseguir que todos los personajes  tengan al menos un objeto.}
 
-\bigskip
-
-El mapa planteado en este problema es el siguiente:
-
-\texttt{TO DO}
-
 \medskip
 
 El objetivo es que todos los personajes dispongan de un objeto, es decir, que se cumpla:
@@ -525,5 +553,88 @@ El plan generado por FF es el siguiente:
        76: GIVE PATRICK ALGORITHM R9 PRINCE
 
 \end{multicols}
+
+\subsection{Ejercicio 2}
+\subsubsection{Mapa de problema 1}
+\includegraphics[scale=0.5]{img/e2.png}
+\subsubsection{Apartado A}
+En el ejercicio 2 se pide adecuar el dominio ya definido a la nueva característica de que los caminos tienen una 
+longitud definida.
+
+Para ello, se ha introducido una nueva función, \texttt{(distance)}, definida en el problema.
+En la regla \texttt{GO}, al desplazarse se le suma al coste total del plan el valor definido de \texttt{(distance z1 z2)}.
+
+\subsubsection{Apartado B}
+En los problemas definidos para el dominio del ejercicio 2, ahora se indicará la distancia entre dos zonas, asignando el valor de
+\texttt{(distance ?z1 ?z2)} junto con la declaración de los caminos. Por ejemplo, si hay un camino de distancia 3 entre z1 y z7, en 
+el problema aparecería:
+
+\texttt{(path z1 z7) (path z7 z1) (= (distance z1 z7) 3) (= (distance z7 z1) 3)}
+
+\subsubsection{Apartado C}
+El parser se ha ampliado para leer la distancia entre las zonas. Para ello, en lugar de guardar una 2-tupla con las zonas conectadas en el vector correspondiente, se guarda una 3-tupla, con las zonas y la distancia entre ellas. Posteriormente se interpreta y escribe en el 
+fichero resultado.
+
+
+\subsection{Ejercicio 3}
+\subsubsection{Mapa de problema 1}
+\includegraphics[scale=0.5]{img/e3.png}
+\subsubsection{Apartados A y B}
+En el ejercicio 3 se pide introducir terrenos a las diferentes zonas, necesitando objetos especiales para pasar por algunos de ellos. Además, ahora el jugador dispondrá de una mochila, en la que podrá guardar un objeto extra.
+
+
+Se ha modificado la forma en la que se representan los objetos que tiene el jugador. Primero, si tiene la mano vacía, existirá en la 
+base de hechos \texttt{(hand\_empty)}, y si lo está la mochila, \texttt{(bag,\_empty)}. 
+
+
+Si tiene algo en la mano, existirá en la base de hechos \texttt{(on\_hand ?o - object)}, y lo mismo en la mochila con \texttt{(on\_bag ?o - object)}.
+
+
+Si necesitamos pasar por terrenos por los que necesitamos ropa especial, comprobará si la tenemos en la mano o en la mochila en la acción \texttt{GO}.
+
+\subsubsection{Apartado C}
+En los problemas definidos para el dominio del ejercicio 3, se indicará el terreno de cada zona con el predicado \texttt{(room\_type ?z - room ?t - terrain)}.
+
+\subsubsection{Apartado D}
+El parser se ha ampliado para incorporar el tipo de terreno al problema. Si no se definen las zapatillas o el bikini, se situarán en una zona arbitraria.
+
+\subsection{Ejercicio 4}
+\subsubsection{Mapa de problema 1}
+\includegraphics[scale=0.5]{img/e3.png}
+\subsubsection{Apartado A}
+En el ejercicio 4 se proporciona una tabla de puntuación, con la que se define cuántos puntos gana el jugador por entregar un
+determinado objeto a un determinado personaje. El dominio se ha modificado añadiendo las funciones \texttt{(points\_given ?ch - npc ?o - object)} y \texttt{(points\_earned)}, que indican los puntos dados por un npc dado un objeto y los puntos totales acumulados, respectivamente.
+
+\subsubsection{Apartado B}
+La tabla se ha representado utilizando la función \texttt{(points\_given ?ch - npc ?o - object)}.
+
+\subsubsection{Apartado C}
+El parser se ha actualizado para leer los puntos a alcanzar e incluirlos como parte de la meta.
+
+\subsection{Ejercicio 5}
+\subsubsection{Mapa de problema 1}
+\includegraphics[scale=0.5]{img/e3.png}
+\subsubsection{Apartado A}
+Se ha ampliado el dominio anterior para representar el bolsillo de cada personaje añadiendo las funciones \texttt{(stock ?ch - npc)} y \texttt{(max\_stock ?ch - npc)}, que representan los objetos obtenidos y la capacidad máxima, respectivamente.
+
+En la acción \texttt{GIVE}, se ha añadido que compruebe si el personaje tiene hueco para más objetos, y en caso de tenerlo, se le entregue y se incremente en uno el total de objetos. Si no, no puede entregarlo.
+
+\subsubsection{Apartado B}
+El problema se ha extendido añadiendo el stock máximo de los NPC, y comenzando todos con cero objetos. 
+
+\subsubsection{Apartado C}
+El parser se ha ampliado para representar el stock de cada personaje, añadiendo también que todos comienzan con cero objetos.
+
+\subsection{Ejercicio 6}
+\subsubsection{Mapa de problema 1}
+
+\subsubsection{Apartado A}
+En este ejercicio se ha introducido un nuevo jugador, y por tanto, todos los predicados que utilizábamos anteriormente para representar el estado del jugador ahora necesitan un parámetro. Se han modificado para que ambos jugadores puedan hacer uso de ellos. También se ha
+añadido la función \texttt{(total\_points)}, para representar los puntos conseguidos en conjunto.
+
+\subsubsection{Apartado B}
+Se han indicado las condiciones iniciales del segundo jugador en el problema, y los puntos a conseguir.
+
+
 
 \end{document}
