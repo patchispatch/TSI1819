@@ -11,7 +11,7 @@
     a1 - aircraft
 )
 (:init
-    (at p1 c4) 
+    (at p1 c2) 
     (at p2 c4)
     (at p3 c5)
     (at a1 c4)
@@ -47,10 +47,9 @@
 
 (:tasks-goal
    :tasks(
-   (transport-person p1 c4)
    (transport-person p2 c5)
    (transport-person p3 c2)
-   
+   (transport-person p1 c4)
    )
   )
 )
