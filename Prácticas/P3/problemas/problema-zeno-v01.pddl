@@ -46,13 +46,12 @@
 
 
 (:tasks-goal
-   :tasks(
-   (transport-person p1 c5)
-   (transport-person p2 c5)
-   (transport-person p3 c5)
-   
-   )
-  )
+    :tasks(
+        (transport-person p1 c5)
+        (transport-person p2 c5)
+        (transport-person p3 c5)
+    )
+)
 )
    
     
