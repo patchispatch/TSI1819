@@ -12,7 +12,7 @@
 )
 (:init
     (at p1 c1) 
-    (at p2 c2)
+    (at p2 c1)
     (at p3 c3)
     (at a1 c4)
     (= (fuel-limit) 1500)
@@ -40,7 +40,7 @@
     (= (fast-burn a1) 2)
     (= (capacity a1) 300)
     (= (passengers a1) 0)
-    (= (max-passengers) 1)
+    (= (max-passengers a1) 2)
     (= (refuel-rate a1) 1)
     (= (total-fuel-used) 0)
     (= (boarding-time) 1)

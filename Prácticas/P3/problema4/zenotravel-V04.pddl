@@ -152,5 +152,19 @@
     )
 )
 
+(:task embarcar
+    :parameters (?p - person ?a - aircraft ?c - city)
+
+    (:method embarque
+        :precondition ()
+
+        :tasks (
+            (board ?p ?a ?c)
+            (embarcar)
+        )
+    )
+    
+)
+
 (:import "Primitivas-Zenotravel.pddl") 
 )
