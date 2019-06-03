@@ -59,6 +59,11 @@
   (> (fuel ?a) 1)
 )
 
+(:derived 
+    (destino ?p ?c)
+    (transport-person ?p ?c)
+)
+
 (:task transport-person
 	:parameters (?p - person ?c - city)
 	
