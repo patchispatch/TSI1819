@@ -22,6 +22,9 @@
              (in ?p - person ?a - aircraft)
              (different ?x ?y) (igual ?x ?y)
              (hay-fuel ?a ?c1 ?c2)
+             (quiere-viajar ?p - person)
+             (en-avion ?a - aircraft ?p - person)
+             (destino ?p - person ?c - city)
              )
 (:functions (fuel ?a - aircraft)
             (distance ?c1 - city ?c2 - city)
@@ -41,11 +44,17 @@
 
 ;; el consecuente "vacío" se representa como "()" y significa "siempre verdad"
 (:derived
-  (igual ?x ?x) ())
+    (igual ?x ?x) ())
 
 (:derived 
-  (different ?x ?y) (not (igual ?x ?y)))
+    (different ?x ?y) (not (igual ?x ?y)))
 
+(:derived
+    (destino ?p ?c)
+
+(:derived
+    (quiere-viajar ?p) (and (at ?p ?c) (not(destino ?p ?c)))
+)
 
 
 ;; este literal derivado se utiliza para deducir, a partir de la información en el estado actual, 
@@ -64,49 +73,6 @@
     (transport-person ?p ?c)
 )
 
-(:task transport-person
-	:parameters (?p - person ?c - city)
-	
-    (:method PersonaEnCiudadDestino ; si la persona est� en la ciudad no se hace nada
-        :precondition 
-            (at ?p ?c)
-        
-        :tasks 
-            ()
-    )
-
-    ;si no está en la ciudad destino, pero avion y persona est�n en la misma ciudad 
-    (:method PersonaEnCiudadAvion
-        :precondition (and 
-            (at ?p - person ?c1 - city)
-            (at ?a - aircraft ?c1 - city)
-        )
-
-        :tasks ( 
-            (board ?p ?a ?c1)
-            (mover-avion ?a ?c1 ?c)
-            (debark ?p ?a ?c )
-        )
-    )
-
-    ; Si la persona está en una ciudad distinta, se viaja hasta allí:
-    (:method PersonaEnOtraCiudad
-        :precondition (and
-            (at ?p - person ?cp - city) 
-            (at ?a - aircraft ?ca - city)
-            (different ?cp ?ca)
-        )
-        
-        :tasks ( 
-            (mover-avion ?a ?ca ?cp)
-            (board ?p ?a ?cp)
-            (mover-avion ?a ?cp ?c)
-            (debark ?p ?a ?c)
-        )
-    )
-)
-    
-
 (:task mover-avion
     :parameters (?a - aircraft ?c1 - city ?c2 - city)
     (:method NoNecesitaRepostar
@@ -114,7 +80,7 @@
             (hay-fuel ?a ?c1 ?c2)
         
         :tasks (
-            (viajar ?a ?c1 ?c2)
+            (volar ?a ?c1 ?c2)
         )
     )
 
@@ -124,12 +90,12 @@
         
         :tasks (
             (refuel ?a ?c1)
-            (viajar ?a ?c1 ?c2)
+            (volar ?a ?c1 ?c2)
         )
     )
 )
 
-(:task viajar
+(:task volar
     :parameters (?a - aircraft ?c1 - city ?c2 - city)
     
     (:method Rapido
@@ -158,18 +124,76 @@
 )
 
 (:task embarcar
-    :parameters (?p - person ?a - aircraft ?c - city)
+    :parameters (?a - aircraft ?c - city)
 
-    (:method embarque
-        :precondition ()
+    (:method PasajerosListos
+        :precondition (and
+            (not(at ?p - person ?c))
+            (at ?a ?c)
+        )
+
+        :tasks (
+            (viajar ?a)
+        )
+    )
+
+    (:method HayGenteEnCiudad
+        :precondition (and
+            (at ?p - person ?c)
+            (at ?a ?c)
+        )
 
         :tasks (
             (board ?p ?a ?c)
+            (not(at ?p ?c))
+            (en-avion ?p ?a)
+            (embarcar ?a ?c)
+        )
+    )
+)
+
+(:tasks viajar
+    :parameters (?a - aircraft)
+
+    (:method NadieQuiereViajar
+        :precondition (and
+            (not(quiere-viajar ?p))
+        )
+
+        :tasks 
+            ()
+    )
+
+    (:method NoHayPasajeros
+        :precondition (and
+            (at ?a ?ca)
+            (not (en-avion ?p - person ?a))
+            (quiere-viajar ?p)
+            (destino ?p ?c)
+        )
+
+        :tasks (
+            (mover-avion ?a ?ca ?c)
             (embarcar)
         )
     )
-    
+
+    (:method HayPasajeros
+        :precondition (and
+            (en-avion ?p - person ?a)
+            (destino ?p ?c)
+            (at ?a ?c2)
+            (different ?c ?c2)
+        )
+
+        :tasks (
+            (mover-avion ?a ?c ?c2)
+            (desembarcar)
+        )
+    )
 )
+
+
 
 (:import "Primitivas-Zenotravel.pddl") 
 )
