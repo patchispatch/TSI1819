@@ -141,6 +141,7 @@
         :precondition (and
             (at ?p - person ?c)
             (at ?a ?c)
+            (quiere-viajar ?p)
         )
 
         :tasks (
@@ -157,7 +158,7 @@
 
     (:method NadieQuiereViajar
         :precondition (and
-            (not(quiere-viajar ?p))
+            (not(quiere-viajar ?p - person))
         )
 
         :tasks 
@@ -167,9 +168,10 @@
     (:method NoHayPasajeros
         :precondition (and
             (at ?a ?ca)
-            (not (en-avion ?p - person ?a))
-            (quiere-viajar ?p)
-            (destino ?p ?c)
+            (quiere-viajar ?p - person)
+            (not (en-avion ?p ?a))
+            (destino ?p ?c - city)
+            (different ?ca ?c)
         )
 
         :tasks (
