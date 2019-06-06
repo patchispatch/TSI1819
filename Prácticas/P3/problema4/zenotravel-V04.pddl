@@ -49,8 +49,10 @@
 (:derived 
     (different ?x ?y) (not (igual ?x ?y)))
 
-(:derived
+(:derived 
     (destino ?p ?c)
+    (transport-person ?p ?c)
+)
 
 (:derived
     (quiere-viajar ?p) (and (at ?p ?c) (not(destino ?p ?c)))
@@ -66,11 +68,6 @@
 (:derived   
   (hay-fuel ?a - aircraft ?c1 - city ?c2 - city)
   (> (fuel ?a) 1)
-)
-
-(:derived 
-    (destino ?p ?c)
-    (transport-person ?p ?c)
 )
 
 (:task mover-avion
@@ -153,7 +150,7 @@
     )
 )
 
-(:tasks viajar
+(:task viajar
     :parameters (?a - aircraft)
 
     (:method NadieQuiereViajar
@@ -168,15 +165,15 @@
     (:method NoHayPasajeros
         :precondition (and
             (at ?a ?ca)
-            (quiere-viajar ?p - person)
+            (at ?p - person ?c)
+            (quiere-viajar ?p)
             (not (en-avion ?p ?a))
-            (destino ?p ?c - city)
             (different ?ca ?c)
         )
 
         :tasks (
             (mover-avion ?a ?ca ?c)
-            (embarcar)
+            (embarcar ?a ?c)
         )
     )
 
@@ -190,7 +187,31 @@
 
         :tasks (
             (mover-avion ?a ?c ?c2)
-            (desembarcar)
+            (desembarcar ?a ?c)
+        )
+    )
+)
+
+(:task desembarcar
+    :parameters (?a - aircraft ?c - city)
+
+    (:method PasajerosListos
+        :precondition (and
+            ()
+        )
+    )
+    
+    (:method GenteQuiereBajar
+        :precondition (and
+            (en-avion ?p - person ?a)
+            (destino ?p ?c)
+        )
+
+        :tasks (
+            (debark ?p ?a ?c)
+            (not (quiere-viajar ?p))
+            (at ?p ?c)
+            (desembarcar ?a ?c)
         )
     )
 )
